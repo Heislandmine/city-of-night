@@ -1,16 +1,26 @@
 import React from "react";
 import { Box, Spacer, Text } from "ink";
 
-export const TopStatusBar = () => {
+export const TopStatusBar = ({
+  date,
+  phase,
+  leftDays,
+  daysPassed,
+}: {
+  date: string;
+  phase: "昼" | "夜";
+  leftDays: number;
+  daysPassed: number;
+}) => {
   return (
     <Box borderStyle={"single"} width={"100%"}>
-      <Text>2124/4/1</Text>
+      <Text>{date}</Text>
       <Spacer />
-      <Text>(昼)</Text>
+      <Text>{phase}</Text>
       <Spacer />
-      <Text>10日目</Text>
+      <Text>{`${daysPassed}日目`}</Text>
       <Spacer />
-      <Text>残り200日</Text>
+      <Text>{`残り${leftDays}日`}</Text>
     </Box>
   );
 };
