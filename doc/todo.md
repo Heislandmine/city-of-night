@@ -1,11 +1,11 @@
-~~- TopActionMenuを別ファイルに切り出し~~
+- 初期のキャラクターを実装
 
-~~- TopStatusBarを別ファイルに切り出し~~
+- キャラクター購入処理を実装
 
-- TopStatusbar用に表示するデータをバックエンドに移す
+  - 購入可能キャラクター一覧画面の実装
 
-  - GameProgress型を定義
+  - キャラクターシート読み込み機能の実装
 
-  - GameProgressServiceクラスを実装
+  - キャラクターリポジトリの実装
 
-  - GameProgressServiceからデータを取得してTopStatusbarに表示する
+- アクションメニューの外部ファイル化
