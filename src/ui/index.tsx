@@ -1,45 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Box, render, Spacer, Text, useInput } from "ink";
+import { GameProgressService } from "../core/Services/GameProgressService.js";
+import { TopMenuView } from "./component/TopMenuView.js";
 import { TopActionMenu } from "./component/TopActionMenu.js";
 import { TopStatusBar } from "./component/TopStatusBar.js";
-import { GameProgressService } from "../core/Services/GameProgressService.js";
 
-const PurchaseAvailableCharacterListView = () => {
-  return <Text>ここに購入可能なキャラクターが表示されます</Text>;
-};
-
-const navigateView = (currentViewName: string) => {
-  switch (currentViewName) {
-    case "Top":
-      return (
-        <TopActionMenu
-          menuItems={[
-            { callNumber: 100, displayName: "調教" },
-            { callNumber: 300, displayName: "奴隷購入" },
-            { callNumber: 200, displayName: "保存" },
-          ]}
-        />
-      );
-    case "purchaseCharacter":
-      return <PurchaseAvailableCharacterListView />;
-  }
-};
-
-const topActionMenuItems = [
-  { callNumber: 100, displayName: "調教" },
-  { callNumber: 300, displayName: "奴隷購入" },
-  { callNumber: 200, displayName: "保存" },
-];
-
-const App = ({
+const PurchaseAvailableCharacterListView = ({
   gameProgressService,
+  navigate,
 }: {
   gameProgressService: GameProgressService;
+  navigate: (viewName: string) => void;
 }) => {
-  const [currentViewName, setCurrentViewName] = useState("Top");
-  const progress = gameProgressService.currentProgress();
   const [userInput, setUserInput] = useState("");
   const [outputString, setOutputString] = useState("");
+  const progress = gameProgressService.currentProgress();
 
   useEffect(() => {
     setOutputString(userInput);
@@ -52,8 +27,8 @@ const App = ({
 
     if (key.return) {
       switch (userInput) {
-        case "300":
-          setCurrentViewName("purchaseCharacter");
+        case "200":
+          navigate("Top");
           break;
 
         default:
@@ -71,10 +46,43 @@ const App = ({
         daysPassed={progress.daysPassed}
         leftDays={progress.lefDays}
       />
-      {navigateView(currentViewName)}
+      <TopActionMenu
+        menuItems={[
+          { callNumber: 1, displayName: "デモ子" },
+          { callNumber: 200, displayName: "戻る" },
+        ]}
+      />
       <Text>{outputString}</Text>
     </Box>
   );
+};
+
+const App = ({
+  gameProgressService,
+}: {
+  gameProgressService: GameProgressService;
+}) => {
+  const [currentViewName, setCurrentViewName] = useState("Top");
+  const navigateView = (currentViewName: string) => {
+    switch (currentViewName) {
+      case "Top":
+        return (
+          <TopMenuView
+            gameProgressService={gameProgressService}
+            navigate={setCurrentViewName}
+          />
+        );
+      case "purchaseCharacter":
+        return (
+          <PurchaseAvailableCharacterListView
+            gameProgressService={gameProgressService}
+            navigate={setCurrentViewName}
+          />
+        );
+    }
+  };
+
+  return navigateView(currentViewName);
 };
 
 export const startUI = (gameProgressService: GameProgressService) => {
