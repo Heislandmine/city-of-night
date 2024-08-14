@@ -4,6 +4,7 @@ import { TopStatusBar } from "./TopStatusBar.js";
 import { GameProgressService } from "../../core/Services/GameProgressService.js";
 import { TopActionMenu } from "./TopActionMenu.js";
 import { exit } from "process";
+import { FooterMenu } from "./FooterMenu.js";
 
 export const TopMenuView = ({
   gameProgressService,
@@ -56,11 +57,14 @@ export const TopMenuView = ({
         menuItems={[
           { callNumber: 100, displayName: "調教" },
           { callNumber: 300, displayName: "奴隷購入" },
+        ]}
+      />
+      <FooterMenu
+        menuItems={[
           { callNumber: 200, displayName: "保存" },
           { callNumber: 999, displayName: "終了" },
         ]}
       />
-
       <Text>{outputString}</Text>
     </Box>
   );
