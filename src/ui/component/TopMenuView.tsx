@@ -21,10 +21,6 @@ export const TopMenuView = ({
   }, [userInput]);
 
   useInput((input, key) => {
-    if (key.backspace) {
-      console.log("bs");
-    }
-
     if (key.return) {
       switch (userInput) {
         case "300":
