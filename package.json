@@ -2,7 +2,8 @@
   "name": "city-of-night",
   "type": "module",
   "scripts": {
-    "start": "tsc && node ./build/index.js"
+    "start": "tsc && node ./build/index.js",
+    "test": "vitest"
   },
   "packageManager": "yarn@4.4.0",
   "volta": {

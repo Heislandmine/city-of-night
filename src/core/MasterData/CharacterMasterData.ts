@@ -1,13 +1,13 @@
 import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
 
-export type CharacterSheetData = {
+export type CharacterSheet = {
   id: string;
   displayName: string;
   price: number;
 };
 export class CharacterMasterData {
-  private _characters: CharacterSheetData[];
+  private _characters: CharacterSheet[];
 
   constructor(pattern: string) {
     const items = readdirSync(pattern).map((e) => join(pattern, e));
