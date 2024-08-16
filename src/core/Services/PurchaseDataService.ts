@@ -16,20 +16,25 @@ export interface ICallIdTable {
   get(): CallIdTableItem[];
 }
 
+export type CharacterSheet = {
+  id: string;
+  displayName: string;
+  price: number;
+};
+
+export interface ICharacterSheets {
+  getAll(): CharacterSheet[];
+}
+
 export class PurchaseDataService {
   constructor(
+    private readonly _characterSheets: ICharacterSheets,
     private readonly _purchaseCallIdTable: ICallIdTable,
     private readonly _characterPurchaseBaseDataFactory: CharacterPurchaseBaseDataFactory,
   ) {}
 
   getAllCharacterBaseData(): CharacterPurchaseBaseData[] {
-    const characterData = [
-      {
-        id: "test:character:demo-ko",
-        displayName: "テスト子",
-        price: 2000,
-      },
-    ];
+    const characterData = this._characterSheets.getAll();
 
     const callIdTable = this._purchaseCallIdTable.get();
 

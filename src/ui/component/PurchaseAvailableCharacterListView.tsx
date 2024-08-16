@@ -4,17 +4,18 @@ import { Box, Text, useInput } from "ink";
 import { TopStatusBar } from "./TopStatusBar.js";
 import { TopActionMenu } from "./TopActionMenu.js";
 import { FooterMenu } from "./FooterMenu.js";
+import { PurchaseDataService } from "../../core/Services/PurchaseDataService.js";
 
 export const PurchaseAvailableCharacterListViewActionMenu = ({
   menuItems,
 }: {
-  menuItems: { callNumber: number; displayName: string; price: number }[];
+  menuItems: { callId: number; displayName: string; price: number }[];
 }) => {
   return (
     <Box width={"100%"} borderStyle={"classic"} gap={2}>
       {menuItems.map((e) => (
         <Text key={e.displayName}>
-          <Text>{`[${e.callNumber}]${e.displayName}`}</Text>
+          <Text>{`[${e.callId}]${e.displayName}`}</Text>
           <Text> </Text>
           <Text bold>{`${e.price}G`}</Text>
         </Text>
@@ -25,9 +26,11 @@ export const PurchaseAvailableCharacterListViewActionMenu = ({
 
 export const PurchaseAvailableCharacterListView = ({
   gameProgressService,
+  purchaseDataService,
   navigate,
 }: {
   gameProgressService: GameProgressService;
+  purchaseDataService: PurchaseDataService;
   navigate: (viewName: string) => void;
 }) => {
   const [userInput, setUserInput] = useState("");
@@ -65,10 +68,7 @@ export const PurchaseAvailableCharacterListView = ({
         leftDays={progress.lefDays}
       />
       <PurchaseAvailableCharacterListViewActionMenu
-        menuItems={[
-          { callNumber: 1, displayName: "デモ子", price: 2000 },
-          { callNumber: 2, displayName: "デモ子2", price: 3000 },
-        ]}
+        menuItems={purchaseDataService.getAllCharacterBaseData()}
       />
       <FooterMenu menuItems={[{ callNumber: 999, displayName: "戻る" }]} />
       <Text>{outputString}</Text>

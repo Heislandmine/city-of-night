@@ -1,12 +1,11 @@
 import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
+import {
+  CharacterSheet,
+  ICharacterSheets,
+} from "../Services/PurchaseDataService.js";
 
-export type CharacterSheet = {
-  id: string;
-  displayName: string;
-  price: number;
-};
-export class CharacterMasterData {
+export class CharacterMasterData implements ICharacterSheets {
   private _characters: CharacterSheet[];
 
   constructor(pattern: string) {
@@ -21,10 +20,7 @@ export class CharacterMasterData {
     });
   }
 
-  getPurchaseData() {
-    return this._characters.map((e) => ({
-      displayName: e.displayName,
-      price: e.price,
-    }));
+  getAll(): CharacterSheet[] {
+    return [...this._characters];
   }
 }

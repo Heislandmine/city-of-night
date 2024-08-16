@@ -1,7 +1,7 @@
-import { CharacterSheet } from "../MasterData/CharacterMasterData.js";
 import {
   CallIdTableItem,
   CharacterPurchaseBaseData,
+  CharacterSheet,
 } from "./PurchaseDataService.js";
 
 export class CharacterSheetDataNotFound extends Error {}

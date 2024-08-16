@@ -6,7 +6,7 @@ test("コンストラクタで指定したパスのパターンからキャラ�
   const pattern = join(process.cwd(), "test", "Mods", "core", "character");
   const sut = new CharacterMasterData(pattern);
 
-  const result = sut.getPurchaseData();
+  const result = sut.getAll();
 
   expect(result).toHaveLength(1);
 });
