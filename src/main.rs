@@ -24,40 +24,18 @@ fn render_top_bar(frame: &mut Frame, area: Rect) {
             Constraint::Percentage(25),
             Constraint::Percentage(25),
         ])
+        .margin(1)
         .split(area);
-
     frame.render_widget(
-        Paragraph::new("2124/8/5").centered().block(
-            Block::new()
-                .border_type(BorderType::Plain)
-                .borders(Borders::TOP | Borders::LEFT | Borders::BOTTOM),
-        ),
-        top_bar_layout[0],
+        Block::new()
+            .border_type(BorderType::Plain)
+            .borders(Borders::all()),
+        area,
     );
-    frame.render_widget(
-        Paragraph::new("昼").centered().block(
-            Block::new()
-                .border_type(BorderType::Plain)
-                .borders(Borders::TOP | Borders::BOTTOM),
-        ),
-        top_bar_layout[1],
-    );
-    frame.render_widget(
-        Paragraph::new("10日目").centered().block(
-            Block::new()
-                .border_type(BorderType::Plain)
-                .borders(Borders::TOP | Borders::BOTTOM),
-        ),
-        top_bar_layout[2],
-    );
-    frame.render_widget(
-        Paragraph::new("残り200日").centered().block(
-            Block::new()
-                .border_type(BorderType::Plain)
-                .borders(Borders::TOP | Borders::BOTTOM | Borders::RIGHT),
-        ),
-        top_bar_layout[3],
-    );
+    frame.render_widget(Paragraph::new("2124/8/5").centered(), top_bar_layout[0]);
+    frame.render_widget(Paragraph::new("昼").centered(), top_bar_layout[1]);
+    frame.render_widget(Paragraph::new("10日目").centered(), top_bar_layout[2]);
+    frame.render_widget(Paragraph::new("残り200日").centered(), top_bar_layout[3]);
 }
 
 fn render_main_ui(frame: &mut Frame) {
