@@ -13,3 +13,7 @@
 .pnp.*
 node_modules
 build
+
+# Added by cargo
+
+/target
