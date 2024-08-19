@@ -6,7 +6,7 @@ use ratatui::{
         execute,
         terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     },
-    layout::{Constraint, Direction, Layout},
+    layout::{Constraint, Direction, Layout, Rect},
     prelude::CrosstermBackend,
     style::{Color, Style},
     symbols::{block, border},
@@ -14,13 +14,7 @@ use ratatui::{
     Frame, Terminal,
 };
 
-fn render_main_ui(frame: &mut Frame) {
-    let area = frame.area();
-    let layout = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints(vec![Constraint::Percentage(20), Constraint::Percentage(80)])
-        .split(area);
-
+fn render_top_bar(frame: &mut Frame, area: Rect) {
     let top_bar_layout = Layout::default()
         .direction(Direction::Horizontal)
         .constraints(vec![
@@ -29,13 +23,13 @@ fn render_main_ui(frame: &mut Frame) {
             Constraint::Percentage(25),
             Constraint::Percentage(25),
         ])
-        .split(layout[0]);
+        .split(area);
 
     let top_bar_block = Block::new()
         .border_type(BorderType::Plain)
         .borders(Borders::all())
         .border_style(Style::default().fg(Color::White));
-    frame.render_widget(top_bar_block, layout[0]);
+    frame.render_widget(top_bar_block, area);
     frame.render_widget(
         Paragraph::new("2124/8/5").centered().block(
             Block::new()
@@ -68,6 +62,17 @@ fn render_main_ui(frame: &mut Frame) {
         ),
         top_bar_layout[3],
     );
+}
+
+fn render_main_ui(frame: &mut Frame) {
+    let area = frame.area();
+
+    let layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(vec![Constraint::Percentage(20), Constraint::Percentage(80)])
+        .split(area);
+
+    render_top_bar(frame, layout[0]);
 
     frame.render_widget(
         Block::new()
