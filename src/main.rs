@@ -25,11 +25,6 @@ fn render_top_bar(frame: &mut Frame, area: Rect) {
         ])
         .split(area);
 
-    let top_bar_block = Block::new()
-        .border_type(BorderType::Plain)
-        .borders(Borders::all())
-        .border_style(Style::default().fg(Color::White));
-    frame.render_widget(top_bar_block, area);
     frame.render_widget(
         Paragraph::new("2124/8/5").centered().block(
             Block::new()
