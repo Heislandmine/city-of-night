@@ -1,4 +1,4 @@
-use std::io;
+use std::{io, process::Command};
 
 use ratatui::{
     crossterm::{
@@ -10,6 +10,7 @@ use ratatui::{
     prelude::CrosstermBackend,
     style::{Color, Style},
     symbols::{block, border},
+    text::{Line, Span},
     widgets::{Block, BorderType, Borders, Paragraph},
     Frame, Terminal,
 };
@@ -75,6 +76,44 @@ fn render_main_ui(frame: &mut Frame) {
             .borders(Borders::all())
             .border_style(Style::default().fg(Color::White)),
         layout[1],
+    );
+
+    let command_area_raws = Layout::new(
+        Direction::Vertical,
+        vec![
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+        ],
+    )
+    .split(layout[1]);
+
+    let command_area_first_row = Layout::new(
+        Direction::Horizontal,
+        vec![
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+        ],
+    )
+    .margin(1)
+    .split(command_area_raws[0]);
+
+    frame.render_widget(
+        Paragraph::new("[100]調教").centered(),
+        command_area_first_row[0],
+    );
+
+    frame.render_widget(
+        Paragraph::new("[200]セーブ").centered(),
+        command_area_first_row[1],
+    );
+
+    frame.render_widget(
+        Paragraph::new("[300]ロード").centered(),
+        command_area_first_row[2],
     );
 }
 fn main() -> io::Result<()> {
