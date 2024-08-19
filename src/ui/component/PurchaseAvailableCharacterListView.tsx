@@ -5,6 +5,7 @@ import { TopStatusBar } from "./TopStatusBar.js";
 import { TopActionMenu } from "./TopActionMenu.js";
 import { FooterMenu } from "./FooterMenu.js";
 import { PurchaseDataService } from "../../core/Services/PurchaseDataService.js";
+import { PurchaseService } from "../../core/Services/PurchaseService.js";
 
 export const PurchaseAvailableCharacterListViewActionMenu = ({
   menuItems,
@@ -27,10 +28,12 @@ export const PurchaseAvailableCharacterListViewActionMenu = ({
 export const PurchaseAvailableCharacterListView = ({
   gameProgressService,
   purchaseDataService,
+  purchaseService,
   navigate,
 }: {
   gameProgressService: GameProgressService;
   purchaseDataService: PurchaseDataService;
+  purchaseService: PurchaseService;
   navigate: (viewName: string) => void;
 }) => {
   const [userInput, setUserInput] = useState("");
@@ -53,7 +56,27 @@ export const PurchaseAvailableCharacterListView = ({
           break;
 
         default:
-          setOutputString("不正な値です");
+          const characters = purchaseDataService.getAllCharacterBaseData();
+
+          const target = characters.find(
+            (e) => e.callId.toString() === userInput,
+          );
+
+          if (!target) {
+            setOutputString("不正な値です");
+            return;
+          }
+
+          const result = purchaseService.purchaseCharacter(
+            target.callId.toString(),
+            target.price,
+          );
+
+          if (result) {
+            setOutputString(`${target?.displayName}を購入しました`);
+          } else {
+            setOutputString("資金不足です");
+          }
       }
       setUserInput("");
     }
