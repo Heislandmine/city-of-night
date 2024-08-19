@@ -75,7 +75,7 @@ export const PurchaseAvailableCharacterListView = ({
           if (result) {
             setOutputString(`${target?.displayName}を購入しました`);
           } else {
-            setOutputString("資金不足です");
+            setOutputString("資金不足ですm");
           }
       }
       setUserInput("");
