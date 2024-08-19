@@ -6,12 +6,77 @@ use ratatui::{
         execute,
         terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     },
+    layout::{Constraint, Direction, Layout},
     prelude::CrosstermBackend,
-    style::Stylize,
-    widgets::Paragraph,
-    Terminal,
+    style::{Color, Style},
+    symbols::{block, border},
+    widgets::{Block, BorderType, Borders, Paragraph},
+    Frame, Terminal,
 };
 
+fn render_main_ui(frame: &mut Frame) {
+    let area = frame.area();
+    let layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(vec![Constraint::Percentage(20), Constraint::Percentage(80)])
+        .split(area);
+
+    let top_bar_layout = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(vec![
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+        ])
+        .split(layout[0]);
+
+    let top_bar_block = Block::new()
+        .border_type(BorderType::Plain)
+        .borders(Borders::all())
+        .border_style(Style::default().fg(Color::White));
+    frame.render_widget(top_bar_block, layout[0]);
+    frame.render_widget(
+        Paragraph::new("2124/8/5").centered().block(
+            Block::new()
+                .border_type(BorderType::Plain)
+                .borders(Borders::TOP | Borders::LEFT | Borders::BOTTOM),
+        ),
+        top_bar_layout[0],
+    );
+    frame.render_widget(
+        Paragraph::new("昼").centered().block(
+            Block::new()
+                .border_type(BorderType::Plain)
+                .borders(Borders::TOP | Borders::BOTTOM),
+        ),
+        top_bar_layout[1],
+    );
+    frame.render_widget(
+        Paragraph::new("10日目").centered().block(
+            Block::new()
+                .border_type(BorderType::Plain)
+                .borders(Borders::TOP | Borders::BOTTOM),
+        ),
+        top_bar_layout[2],
+    );
+    frame.render_widget(
+        Paragraph::new("残り200日").centered().block(
+            Block::new()
+                .border_type(BorderType::Plain)
+                .borders(Borders::TOP | Borders::BOTTOM | Borders::RIGHT),
+        ),
+        top_bar_layout[3],
+    );
+
+    frame.render_widget(
+        Block::new()
+            .border_type(BorderType::Plain)
+            .borders(Borders::all())
+            .border_style(Style::default().fg(Color::White)),
+        layout[1],
+    );
+}
 fn main() -> io::Result<()> {
     // setup terminal
     enable_raw_mode()?;
@@ -22,13 +87,7 @@ fn main() -> io::Result<()> {
 
     loop {
         terminal.draw(|frame| {
-            let area = frame.area();
-            frame.render_widget(
-                Paragraph::new("Hello Ratatui! (press 'q' to quit)")
-                    .white()
-                    .on_blue(),
-                area,
-            );
+            render_main_ui(frame);
         })?;
 
         if event::poll(std::time::Duration::from_millis(16))? {
