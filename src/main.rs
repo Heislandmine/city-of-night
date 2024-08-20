@@ -1,4 +1,4 @@
-use std::{io, process::Command};
+use std::io;
 
 use ratatui::{
     crossterm::{
@@ -9,8 +9,6 @@ use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
     prelude::CrosstermBackend,
     style::{Color, Style},
-    symbols::{block, border},
-    text::{Line, Span},
     widgets::{Block, BorderType, Borders, Paragraph},
     Frame, Terminal,
 };
@@ -43,7 +41,7 @@ fn render_main_ui(frame: &mut Frame) {
 
     let layout = Layout::default()
         .direction(Direction::Vertical)
-        .constraints(vec![Constraint::Percentage(20), Constraint::Percentage(80)])
+        .constraints(vec![Constraint::Max(3), Constraint::Percentage(80)])
         .split(area);
 
     render_top_bar(frame, layout[0]);
