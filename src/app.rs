@@ -8,6 +8,8 @@ use ratatui::{
     Frame,
 };
 
+use crate::tui::Tui;
+
 pub struct App {
     pub should_quit: bool,
 }
@@ -116,6 +118,22 @@ impl App {
                 }
             }
         }
+
+        Ok(())
+    }
+
+    pub fn run(&mut self, mut tui: Tui) -> io::Result<()> {
+        tui.enter()?;
+
+        while !self.should_quit {
+            tui.draw(|frame| {
+                self.render(frame);
+            })?;
+
+            self.handle_events()?;
+        }
+
+        tui.exit()?;
 
         Ok(())
     }
