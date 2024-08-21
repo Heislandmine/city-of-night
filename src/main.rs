@@ -1,5 +1,6 @@
 use std::io::{self, Stdout};
 
+use app::App;
 use ratatui::{
     crossterm::{
         event::{self, DisableMouseCapture, EnableMouseCapture, KeyCode, KeyEventKind},
@@ -14,6 +15,7 @@ use ratatui::{
 };
 use tui::Tui;
 
+mod app;
 mod tui;
 
 fn render_top_bar(frame: &mut Frame, area: Rect) {
@@ -98,9 +100,10 @@ fn render_main_ui(frame: &mut Frame) {
 
 fn main() -> io::Result<()> {
     let mut tui = Tui::new()?;
+    let mut app = App::new();
     tui.enter()?;
 
-    loop {
+    while !app.should_quit {
         tui.draw(|frame| {
             render_main_ui(frame);
         })?;
@@ -108,7 +111,7 @@ fn main() -> io::Result<()> {
         if event::poll(std::time::Duration::from_millis(16))? {
             if let event::Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
-                    break;
+                    app.quit();
                 }
             }
         }
