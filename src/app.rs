@@ -1,4 +1,7 @@
+use std::io;
+
 use ratatui::{
+    crossterm::event::{self, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Style},
     widgets::{Block, BorderType, Borders, Paragraph},
@@ -100,5 +103,20 @@ impl App {
         frame.render_widget(Paragraph::new("昼").centered(), top_bar_layout[1]);
         frame.render_widget(Paragraph::new("10日目").centered(), top_bar_layout[2]);
         frame.render_widget(Paragraph::new("残り200日").centered(), top_bar_layout[3]);
+    }
+
+    pub fn handle_events(&mut self) -> io::Result<()> {
+        if event::poll(std::time::Duration::from_millis(16))? {
+            if let event::Event::Key(key) = event::read()? {
+                if key.kind == KeyEventKind::Press {
+                    match key.code {
+                        KeyCode::Char('q') => self.quit(),
+                        _ => {}
+                    }
+                }
+            }
+        }
+
+        Ok(())
     }
 }

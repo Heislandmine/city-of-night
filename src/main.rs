@@ -1,7 +1,5 @@
-use std::io::{self};
-
 use app::App;
-use ratatui::crossterm::event::{self, KeyCode, KeyEventKind};
+use std::io::{self};
 use tui::Tui;
 
 mod app;
@@ -17,16 +15,9 @@ fn main() -> io::Result<()> {
             app.render(frame);
         })?;
 
-        if event::poll(std::time::Duration::from_millis(16))? {
-            if let event::Event::Key(key) = event::read()? {
-                if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
-                    app.quit();
-                }
-            }
-        }
+        app.handle_events()?;
     }
 
-    // restore terminal
     tui.exit()?;
 
     Ok(())
