@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, Stdout};
 
 use ratatui::{
     crossterm::{
@@ -7,11 +7,14 @@ use ratatui::{
         terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     },
     layout::{Constraint, Direction, Layout, Rect},
-    prelude::CrosstermBackend,
+    prelude::{Backend, CrosstermBackend},
     style::{Color, Style},
     widgets::{Block, BorderType, Borders, Paragraph},
-    Frame, Terminal,
+    CompletedFrame, Frame, Terminal,
 };
+use tui::Tui;
+
+mod tui;
 
 fn render_top_bar(frame: &mut Frame, area: Rect) {
     let top_bar_layout = Layout::default()
@@ -92,16 +95,13 @@ fn render_main_ui(frame: &mut Frame) {
         command_area_first_row[2],
     );
 }
+
 fn main() -> io::Result<()> {
-    // setup terminal
-    enable_raw_mode()?;
-    let mut stderr = io::stderr(); // This is a special case. Normally using stdout is fine
-    execute!(stderr, EnterAlternateScreen, EnableMouseCapture)?;
-    let backend = CrosstermBackend::new(stderr);
-    let mut terminal = Terminal::new(backend)?;
+    let mut tui = Tui::new()?;
+    tui.enter()?;
 
     loop {
-        terminal.draw(|frame| {
+        tui.draw(|frame| {
             render_main_ui(frame);
         })?;
 
@@ -115,13 +115,7 @@ fn main() -> io::Result<()> {
     }
 
     // restore terminal
-    disable_raw_mode()?;
-    execute!(
-        terminal.backend_mut(),
-        LeaveAlternateScreen,
-        DisableMouseCapture
-    )?;
-    terminal.show_cursor()?;
+    tui.exit()?;
 
     Ok(())
 }
