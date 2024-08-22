@@ -14,19 +14,25 @@ impl Home {
         Self {}
     }
 
-    pub fn render(&self, frame: &mut Frame) {
-        self.render_main_ui(frame);
+    pub fn render(&self, frame: &mut Frame, string_inputted: &String) {
+        self.render_main_ui(frame, string_inputted);
     }
 
-    fn render_main_ui(&self, frame: &mut Frame) {
+    fn render_main_ui(&self, frame: &mut Frame, string_inputted: &String) {
         let area = frame.area();
 
         let layout = Layout::default()
             .direction(Direction::Vertical)
-            .constraints(vec![Constraint::Max(3), Constraint::Percentage(80)])
+            .constraints(vec![
+                Constraint::Max(3),
+                Constraint::Min(3),
+                Constraint::Max(1),
+            ])
             .split(area);
 
         self.render_top_bar(frame, layout[0]);
+
+        frame.render_widget(Paragraph::new(String::from(string_inputted)), layout[2]);
 
         frame.render_widget(
             Block::new()
@@ -100,7 +106,7 @@ impl Home {
 }
 
 impl Component for Home {
-    fn render(&self, frame: &mut Frame) {
-        self.render(frame);
+    fn render(&self, frame: &mut Frame, string_inputted: &String) {
+        self.render(frame, string_inputted);
     }
 }

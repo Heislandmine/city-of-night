@@ -1,7 +1,11 @@
 use std::{collections::HashMap, io};
 
 use ratatui::{
-    crossterm::event::{self, KeyCode, KeyEventKind},
+    crossterm::{
+        event::{self, KeyCode, KeyEventKind},
+        execute,
+        style::Print,
+    },
     Frame,
 };
 
@@ -16,6 +20,7 @@ pub enum ViewsMode {
 pub struct App {
     should_quit: bool,
     current_view: ViewsMode,
+    string_inputted: String,
     components: HashMap<String, Box<dyn Component>>,
 }
 
@@ -24,6 +29,7 @@ impl App {
         Self {
             should_quit: false,
             current_view: ViewsMode::Home,
+            string_inputted: String::new(),
             components,
         }
     }
@@ -36,14 +42,14 @@ impl App {
         match self.current_view {
             ViewsMode::Home => {
                 let component = self.components.get_mut(&String::from("Home")).unwrap();
-                component.render(frame)
+                component.render(frame, &self.string_inputted)
             }
             ViewsMode::PurchaseCharacter => {
                 let component = self
                     .components
                     .get_mut(&String::from("PurchaseCharacter"))
                     .unwrap();
-                component.render(frame)
+                component.render(frame, &self.string_inputted)
             }
         }
     }
@@ -55,6 +61,10 @@ impl App {
                     match key.code {
                         KeyCode::Char('q') => self.quit(),
                         KeyCode::Char('n') => self.current_view = ViewsMode::PurchaseCharacter,
+                        KeyCode::Char(c) => self.string_inputted.push(c),
+                        KeyCode::Backspace => {
+                            let _ = self.string_inputted.pop();
+                        }
                         _ => {}
                     }
                 }

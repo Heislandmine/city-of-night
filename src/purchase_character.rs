@@ -11,7 +11,7 @@ impl PurchaseCharacter {
 }
 
 impl Component for PurchaseCharacter {
-    fn render(&self, frame: &mut ratatui::Frame) {
+    fn render(&self, frame: &mut ratatui::Frame, string_inputted: &String) {
         frame.render_widget(Paragraph::new("奴隷購入画面"), frame.area())
     }
 }
