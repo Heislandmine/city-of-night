@@ -5,6 +5,8 @@ use ratatui::{
     Frame,
 };
 
+use crate::component::Component;
+
 pub struct Home {}
 
 impl Home {
@@ -94,5 +96,11 @@ impl Home {
         frame.render_widget(Paragraph::new("昼").centered(), top_bar_layout[1]);
         frame.render_widget(Paragraph::new("10日目").centered(), top_bar_layout[2]);
         frame.render_widget(Paragraph::new("残り200日").centered(), top_bar_layout[3]);
+    }
+}
+
+impl Component for Home {
+    fn render(&self, frame: &mut Frame) {
+        self.render(frame);
     }
 }
