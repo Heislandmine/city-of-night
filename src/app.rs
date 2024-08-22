@@ -8,8 +8,13 @@ use ratatui::{
 use crate::home::Home;
 use crate::tui::Tui;
 
+pub enum ViewsMode {
+    HOME,
+}
+
 pub struct App {
     pub should_quit: bool,
+    pub current_view: ViewsMode,
     component: Home,
 }
 
@@ -17,6 +22,7 @@ impl App {
     pub fn new(component: Home) -> Self {
         Self {
             should_quit: false,
+            current_view: ViewsMode::HOME,
             component,
         }
     }
@@ -26,7 +32,9 @@ impl App {
     }
 
     pub fn render(&self, frame: &mut Frame) {
-        self.component.render(frame)
+        match self.current_view {
+            ViewsMode::HOME => self.component.render(frame),
+        }
     }
 
     pub fn handle_events(&mut self) -> io::Result<()> {
