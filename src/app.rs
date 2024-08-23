@@ -1,11 +1,7 @@
 use std::{collections::HashMap, io};
 
 use ratatui::{
-    crossterm::{
-        event::{self, KeyCode, KeyEventKind},
-        execute,
-        style::Print,
-    },
+    crossterm::event::{self, KeyCode, KeyEventKind},
     Frame,
 };
 
