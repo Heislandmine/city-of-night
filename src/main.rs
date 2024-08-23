@@ -9,6 +9,7 @@ use std::{
 use tui::Tui;
 
 mod app;
+mod character_sheet;
 mod component;
 mod home;
 mod purchase_character;
