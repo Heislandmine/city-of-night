@@ -1,4 +1,5 @@
 use app::App;
+use character::Character;
 use component::Component;
 use home::Home;
 use purchase_character::PurchaseCharacter;
@@ -9,6 +10,7 @@ use std::{
 use tui::Tui;
 
 mod app;
+mod character;
 mod character_sheet;
 mod component;
 mod home;
@@ -24,7 +26,6 @@ fn main() -> io::Result<()> {
     ]);
     let tui = Tui::new()?;
     let mut app = App::new(view_table);
-
     app.run(tui)?;
 
     Ok(())
