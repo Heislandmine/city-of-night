@@ -5,8 +5,8 @@ use ratatui::{
     Frame,
 };
 
-use crate::component::Component;
-use crate::tui::Tui;
+use crate::app_lib::tui::Tui;
+use crate::ui::Component;
 
 pub enum ViewsMode {
     Home,

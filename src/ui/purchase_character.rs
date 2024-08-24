@@ -3,7 +3,7 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Paragraph},
 };
 
-use crate::component::Component;
+use crate::ui::Component;
 
 pub struct PurchaseCharacter {}
 

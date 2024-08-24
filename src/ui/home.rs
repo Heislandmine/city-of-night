@@ -5,7 +5,7 @@ use ratatui::{
     Frame,
 };
 
-use crate::component::Component;
+use crate::ui::Component;
 
 pub struct Home {}
 

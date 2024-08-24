@@ -1,20 +1,15 @@
-use app::App;
-use component::Component;
-use home::Home;
-use purchase_character::PurchaseCharacter;
+use app_lib::app::App;
+use app_lib::tui::Tui;
 use std::{
     collections::HashMap,
     io::{self},
 };
-use tui::Tui;
 
-mod app;
-mod character;
-mod character_sheet;
-mod component;
-mod home;
-mod purchase_character;
-mod tui;
+use ui::{home::Home, purchase_character::PurchaseCharacter, Component};
+
+mod app_lib;
+mod core;
+mod ui;
 
 fn main() -> io::Result<()> {
     let home: Box<dyn Component> = Box::new(Home::new());
