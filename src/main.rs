@@ -1,5 +1,4 @@
 use app::App;
-use character::Character;
 use component::Component;
 use home::Home;
 use purchase_character::PurchaseCharacter;
