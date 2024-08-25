@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Character {
     id: String,
     display_name: String,

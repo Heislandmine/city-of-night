@@ -1,3 +1,5 @@
+use super::character::Character;
+
 pub struct UserInventory {
     owned_characters: Vec<String>,
 }
@@ -27,6 +29,10 @@ mod game_data_test {
 
     use super::UserInventory;
 
+    fn create_test_character() -> Character {
+        Character::new("test".to_string(), "test".to_string())
+    }
+
     #[test]
     fn test_user_inventory_new() {
         let sut = UserInventory::new(Some(vec![String::from("test")]));
@@ -42,10 +48,53 @@ mod game_data_test {
     #[test]
     fn add_character_test() {
         let mut sut = UserInventory::new(None);
-        let character = Character::new("test".to_string(), "test".to_string());
+        let character = create_test_character();
 
         sut.add_character(character.id());
 
         assert_eq!(sut.owned_characters()[0], character.id())
+    }
+
+    #[cfg(test)]
+    mod game_world_test {
+        use crate::core::game_data::GameWorld;
+
+        use super::create_test_character;
+
+        #[test]
+        fn add_character() {
+            let character = create_test_character();
+            let mut sut = GameWorld::new(None);
+            let character_id = character.id();
+            sut.add_character(character);
+
+            match sut.get_character_by_id(character_id.clone()) {
+                Some(e) => assert_eq!(e.id(), character_id),
+                None => assert!(false),
+            }
+        }
+    }
+}
+
+pub struct GameWorld {
+    characters: Vec<Character>,
+}
+
+impl GameWorld {
+    pub fn new(init_exist_characters: Option<Vec<Character>>) -> Self {
+        let init = match init_exist_characters {
+            Some(i) => i,
+            None => Vec::new(),
+        };
+
+        Self { characters: init }
+    }
+
+    pub fn add_character(&mut self, character: Character) {
+        self.characters.push(character);
+    }
+
+    pub fn get_character_by_id(&self, character_id: String) -> Option<&Character> {
+        self.characters.iter().find(|e| e.id() == character_id)
     }
 }
