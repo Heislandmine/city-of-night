@@ -3,13 +3,26 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Paragraph},
 };
 
-use crate::ui::Component;
+use crate::{core::game_data::CharactersAvailableForPurchase, ui::Component};
 
-pub struct PurchaseCharacter {}
+pub struct PurchaseCharacter {
+    available_character_list: Vec<CharactersAvailableForPurchase>,
+}
 
 impl PurchaseCharacter {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(available_character_list: Option<Vec<CharactersAvailableForPurchase>>) -> Self {
+        let character_list = match available_character_list {
+            Some(e) => e,
+            None => Vec::new(),
+        };
+
+        Self {
+            available_character_list: character_list,
+        }
+    }
+
+    pub fn set_available_character_list(&mut self, new_list: Vec<CharactersAvailableForPurchase>) {
+        self.available_character_list = new_list;
     }
 }
 
@@ -44,7 +57,15 @@ impl Component for PurchaseCharacter {
                 .borders(Borders::all()),
             layouts[0],
         );
-        frame.render_widget(Paragraph::new("[1]デモ子"), command_area_raws[0]);
+
+        for (i, v) in self.available_character_list.iter().enumerate() {
+            let name = v.display_name();
+            let call_id = v.call_id();
+            frame.render_widget(
+                Paragraph::new(format!("[{call_id}]{name}")),
+                command_area_raws[i],
+            );
+        }
 
         // footerコマンドエリアの描画
         frame.render_widget(Block::default().borders(Borders::all()), layouts[1]);

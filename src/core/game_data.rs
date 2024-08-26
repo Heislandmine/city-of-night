@@ -13,6 +13,16 @@ impl GameData {
         }
     }
 
+    pub fn get_characters_available_for_purchase(&self) -> Vec<CharactersAvailableForPurchase> {
+        // TODO: 仮実装
+        vec![CharactersAvailableForPurchase::new(
+            "demo-ko".to_string(),
+            "1".to_string(),
+            "デモ子".to_string(),
+            2000,
+        )]
+    }
+
     pub fn user_inventory(&self) -> &UserInventory {
         &self.user_inventory
     }
@@ -68,6 +78,31 @@ impl GameWorld {
     }
 }
 
+pub struct CharactersAvailableForPurchase {
+    id: String,
+    call_id: String,
+    display_name: String,
+    price: u16,
+}
+
+impl CharactersAvailableForPurchase {
+    pub fn new(id: String, call_id: String, display_name: String, price: u16) -> Self {
+        Self {
+            id,
+            call_id,
+            display_name,
+            price,
+        }
+    }
+
+    pub fn display_name(&self) -> String {
+        self.display_name.clone()
+    }
+
+    pub fn call_id(&self) -> String {
+        self.call_id.clone()
+    }
+}
 #[cfg(test)]
 mod game_data_test {
     use crate::core::character::Character;
