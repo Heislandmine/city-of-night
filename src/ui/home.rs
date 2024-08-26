@@ -109,4 +109,8 @@ impl Component for Home {
     fn render(&self, frame: &mut Frame, string_inputted: &String) {
         self.render(frame, string_inputted);
     }
+
+    fn handle_event(&self, user_input: &String) -> crate::core::actions::Action {
+        crate::core::actions::Action::None
+    }
 }

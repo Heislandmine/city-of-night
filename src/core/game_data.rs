@@ -102,6 +102,10 @@ impl CharactersAvailableForPurchase {
     pub fn call_id(&self) -> String {
         self.call_id.clone()
     }
+
+    pub fn id(&self) -> String {
+        self.id.clone()
+    }
 }
 #[cfg(test)]
 mod game_data_test {

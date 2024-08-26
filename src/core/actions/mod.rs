@@ -3,6 +3,11 @@ use super::{
     game_data::{GameWorld, UserInventory},
 };
 
+pub enum Action {
+    PurchaseCharacter(String),
+    None,
+}
+
 pub struct PurchaseCharacterAction<'a> {
     game_world: &'a mut GameWorld,
     user_inventory: &'a mut UserInventory,

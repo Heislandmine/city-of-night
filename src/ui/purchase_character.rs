@@ -3,7 +3,10 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Paragraph},
 };
 
-use crate::{core::game_data::CharactersAvailableForPurchase, ui::Component};
+use crate::{
+    core::{actions::Action, game_data::CharactersAvailableForPurchase},
+    ui::Component,
+};
 
 pub struct PurchaseCharacter {
     available_character_list: Vec<CharactersAvailableForPurchase>,
@@ -79,5 +82,17 @@ impl Component for PurchaseCharacter {
 
         // ユーザー入力表示エリア
         frame.render_widget(Paragraph::new(String::from(string_inputted)), layouts[2]);
+    }
+
+    fn handle_event(&self, user_input: &String) -> Action {
+        let character_for_purchase = self
+            .available_character_list
+            .iter()
+            .find(|e| *e.call_id() == *user_input);
+
+        match character_for_purchase {
+            Some(character) => Action::PurchaseCharacter(character.id()),
+            None => Action::None,
+        }
     }
 }

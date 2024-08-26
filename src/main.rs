@@ -1,6 +1,6 @@
 use app_lib::app::App;
 use app_lib::tui::Tui;
-use core::game_data::{CharactersAvailableForPurchase, GameData, GameWorld, UserInventory};
+use core::game_data::{GameData, GameWorld, UserInventory};
 use std::{
     collections::HashMap,
     io::{self},

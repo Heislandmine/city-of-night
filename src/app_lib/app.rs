@@ -5,8 +5,8 @@ use ratatui::{
     Frame,
 };
 
-use crate::app_lib::tui::Tui;
 use crate::ui::Component;
+use crate::{app_lib::tui::Tui, core::actions::Action};
 
 pub enum ViewsMode {
     Home,
@@ -50,7 +50,24 @@ impl App {
         }
     }
 
-    pub fn handle_events(&mut self) -> io::Result<()> {
+    fn handle_events(&mut self) {
+        let current_view = match self.current_view {
+            ViewsMode::Home => self.components.get_mut(&String::from("Home")).unwrap(),
+            ViewsMode::PurchaseCharacter => self
+                .components
+                .get_mut(&String::from("PurchaseCharacter"))
+                .unwrap(),
+        };
+        let user_input = String::from(self.string_inputted.clone().trim());
+        let action = current_view.handle_event(&user_input);
+
+        match action {
+            Action::PurchaseCharacter(id) => print!("{id}"),
+            Action::None => {}
+        }
+    }
+
+    pub fn handle_key_events(&mut self) -> io::Result<()> {
         if event::poll(std::time::Duration::from_millis(16))? {
             if let event::Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press {
@@ -60,6 +77,10 @@ impl App {
                         KeyCode::Char(c) => self.string_inputted.push(c),
                         KeyCode::Backspace => {
                             let _ = self.string_inputted.pop();
+                        }
+                        KeyCode::Enter => {
+                            self.string_inputted.push('\n');
+                            self.handle_events()
                         }
                         _ => {}
                     }
@@ -78,7 +99,7 @@ impl App {
                 self.render(frame);
             })?;
 
-            self.handle_events()?;
+            self.handle_key_events()?;
         }
 
         tui.exit()?;
