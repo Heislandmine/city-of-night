@@ -5,8 +5,17 @@ use ratatui::{
     Frame,
 };
 
-use crate::ui::Component;
-use crate::{app_lib::tui::Tui, core::actions::Action};
+use crate::{
+    app_lib::tui::Tui,
+    core::{
+        actions::Action,
+        game_data::{GameWorld, UserInventory},
+    },
+};
+use crate::{
+    core::{actions::PurchaseCharacterAction, game_data::GameData},
+    ui::Component,
+};
 
 pub enum ViewsMode {
     Home,
@@ -17,13 +26,21 @@ pub struct App {
     should_quit: bool,
     current_view: ViewsMode,
     string_inputted: String,
+    user_inventory: UserInventory,
+    game_world: GameWorld,
     components: HashMap<String, Box<dyn Component>>,
 }
 
 impl App {
-    pub fn new(components: HashMap<String, Box<dyn Component>>) -> Self {
+    pub fn new(
+        user_inventory: UserInventory,
+        game_world: GameWorld,
+        components: HashMap<String, Box<dyn Component>>,
+    ) -> Self {
         Self {
             should_quit: false,
+            user_inventory,
+            game_world,
             current_view: ViewsMode::Home,
             string_inputted: String::new(),
             components,
@@ -62,7 +79,11 @@ impl App {
         let action = current_view.handle_event(&user_input);
 
         match action {
-            Action::PurchaseCharacter(id) => print!("{id}"),
+            Action::PurchaseCharacter(id) => {
+                let mut action =
+                    PurchaseCharacterAction::new(&mut self.game_world, &mut self.user_inventory);
+                action.execute(id);
+            }
             Action::None => {}
         }
     }

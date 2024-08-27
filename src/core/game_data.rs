@@ -27,8 +27,16 @@ impl GameData {
         &self.user_inventory
     }
 
+    pub fn get_mut_user_inventory(&mut self) -> &mut UserInventory {
+        &mut self.user_inventory
+    }
+
     pub fn game_world(&self) -> &GameWorld {
         &self.game_world
+    }
+
+    pub fn get_mut_game_world(&mut self) -> &mut GameWorld {
+        &mut self.game_world
     }
 }
 

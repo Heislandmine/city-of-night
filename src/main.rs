@@ -23,7 +23,7 @@ fn main() -> io::Result<()> {
         ("PurchaseCharacter".to_string(), purchase_character),
     ]);
     let tui = Tui::new()?;
-    let mut app = App::new(view_table);
+    let mut app = App::new(UserInventory::new(None), GameWorld::new(None), view_table);
     app.run(tui)?;
 
     Ok(())
