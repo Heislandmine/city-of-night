@@ -5,7 +5,10 @@ use ratatui::{
     Frame,
 };
 
-use crate::core::{actions::PurchaseCharacterAction, contexts::RenderContext, mode::ViewsMode};
+use crate::core::{
+    actions::PurchaseCharacterAction, contexts::RenderContext, game_controller::GameController,
+    mode::ViewsMode,
+};
 use crate::{
     app_lib::tui::Tui,
     core::{
@@ -18,17 +21,24 @@ use crate::{
 pub struct App {
     should_quit: bool,
     string_inputted: String,
+    game_controller: GameController,
     user_inventory: UserInventory,
     game_world: GameWorld,
     view: UserView,
 }
 
 impl App {
-    pub fn new(user_inventory: UserInventory, game_world: GameWorld, view: UserView) -> Self {
+    pub fn new(
+        user_inventory: UserInventory,
+        game_world: GameWorld,
+        game_controller: GameController,
+        view: UserView,
+    ) -> Self {
         Self {
             should_quit: false,
             user_inventory,
             game_world,
+            game_controller,
             string_inputted: String::new(),
             view,
         }

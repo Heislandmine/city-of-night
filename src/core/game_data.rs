@@ -46,6 +46,7 @@ impl GameWorld {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct CharactersAvailableForPurchase {
     id: String,
     call_id: String,
@@ -73,6 +74,10 @@ impl CharactersAvailableForPurchase {
 
     pub fn id(&self) -> String {
         self.id.clone()
+    }
+
+    pub fn price(&self) -> u16 {
+        self.price
     }
 }
 #[cfg(test)]

@@ -1,6 +1,9 @@
 use app_lib::app::App;
 use app_lib::tui::Tui;
-use core::game_data::{GameWorld, UserInventory};
+use core::{
+    game_controller::GameController,
+    game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
+};
 use std::io::{self};
 use ui::user_view::UserView;
 
@@ -11,7 +14,22 @@ mod ui;
 fn main() -> io::Result<()> {
     let view = UserView::new();
     let tui = Tui::new()?;
-    let mut app = App::new(UserInventory::new(None), GameWorld::new(None), view);
+    let controller = GameController::new(
+        UserInventory::new(None),
+        GameWorld::new(None),
+        vec![CharactersAvailableForPurchase::new(
+            "demo-ko".to_string(),
+            "1".to_string(),
+            "デモ子".to_string(),
+            2000,
+        )],
+    );
+    let mut app = App::new(
+        UserInventory::new(None),
+        GameWorld::new(None),
+        controller,
+        view,
+    );
     app.run(tui)?;
 
     Ok(())
