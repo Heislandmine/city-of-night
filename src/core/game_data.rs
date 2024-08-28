@@ -1,45 +1,5 @@
 use super::character::Character;
 
-pub struct GameData {
-    user_inventory: UserInventory,
-    game_world: GameWorld,
-}
-
-impl GameData {
-    pub fn new(user_inventory: UserInventory, game_world: GameWorld) -> Self {
-        Self {
-            user_inventory,
-            game_world,
-        }
-    }
-
-    pub fn get_characters_available_for_purchase(&self) -> Vec<CharactersAvailableForPurchase> {
-        // TODO: 仮実装
-        vec![CharactersAvailableForPurchase::new(
-            "demo-ko".to_string(),
-            "1".to_string(),
-            "デモ子".to_string(),
-            2000,
-        )]
-    }
-
-    pub fn user_inventory(&self) -> &UserInventory {
-        &self.user_inventory
-    }
-
-    pub fn get_mut_user_inventory(&mut self) -> &mut UserInventory {
-        &mut self.user_inventory
-    }
-
-    pub fn game_world(&self) -> &GameWorld {
-        &self.game_world
-    }
-
-    pub fn get_mut_game_world(&mut self) -> &mut GameWorld {
-        &mut self.game_world
-    }
-}
-
 pub struct UserInventory {
     owned_characters: Vec<String>,
 }

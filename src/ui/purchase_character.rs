@@ -4,33 +4,22 @@ use ratatui::{
 };
 
 use crate::{
-    core::{actions::Action, game_data::CharactersAvailableForPurchase},
+    core::{actions::Action, contexts::RenderContext},
     ui::Component,
 };
 
 pub struct PurchaseCharacter {
-    available_character_list: Vec<CharactersAvailableForPurchase>,
+    context: RenderContext,
 }
 
 impl PurchaseCharacter {
-    pub fn new(available_character_list: Option<Vec<CharactersAvailableForPurchase>>) -> Self {
-        let character_list = match available_character_list {
-            Some(e) => e,
-            None => Vec::new(),
-        };
-
-        Self {
-            available_character_list: character_list,
-        }
-    }
-
-    pub fn set_available_character_list(&mut self, new_list: Vec<CharactersAvailableForPurchase>) {
-        self.available_character_list = new_list;
+    pub fn new(context: RenderContext) -> Self {
+        Self { context }
     }
 }
 
 impl Component for PurchaseCharacter {
-    fn render(&self, frame: &mut ratatui::Frame, string_inputted: &String) {
+    fn render(&self, frame: &mut ratatui::Frame) {
         let area = frame.area();
 
         let layouts = Layout::default()
@@ -61,7 +50,12 @@ impl Component for PurchaseCharacter {
             layouts[0],
         );
 
-        for (i, v) in self.available_character_list.iter().enumerate() {
+        for (i, v) in self
+            .context
+            .character_list_available_for_purchase
+            .iter()
+            .enumerate()
+        {
             let name = v.display_name();
             let call_id = v.call_id();
             frame.render_widget(
@@ -81,12 +75,16 @@ impl Component for PurchaseCharacter {
         frame.render_widget(Paragraph::new("[999]戻る"), footer_command_area[0]);
 
         // ユーザー入力表示エリア
-        frame.render_widget(Paragraph::new(String::from(string_inputted)), layouts[2]);
+        frame.render_widget(
+            Paragraph::new(self.context.string_user_inputted.clone()),
+            layouts[2],
+        );
     }
 
     fn handle_event(&self, user_input: &String) -> Action {
         let character_for_purchase = self
-            .available_character_list
+            .context
+            .character_list_available_for_purchase
             .iter()
             .find(|e| *e.call_id() == *user_input);
 

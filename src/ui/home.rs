@@ -5,13 +5,15 @@ use ratatui::{
     Frame,
 };
 
-use crate::ui::Component;
+use crate::{core::contexts::RenderContext, ui::Component};
 
-pub struct Home {}
+pub struct Home {
+    context: RenderContext,
+}
 
 impl Home {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(context: RenderContext) -> Self {
+        Self { context }
     }
 
     pub fn render(&self, frame: &mut Frame, string_inputted: &String) {
@@ -106,8 +108,8 @@ impl Home {
 }
 
 impl Component for Home {
-    fn render(&self, frame: &mut Frame, string_inputted: &String) {
-        self.render(frame, string_inputted);
+    fn render(&self, frame: &mut Frame) {
+        self.render(frame, &self.context.string_user_inputted);
     }
 
     fn handle_event(&self, user_input: &String) -> crate::core::actions::Action {
