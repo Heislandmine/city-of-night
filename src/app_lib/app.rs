@@ -89,9 +89,7 @@ impl App {
                             action = Action::PressedBackspace;
                         }
                         KeyCode::Enter => {
-                            self.string_inputted.push('\n');
-                            self.handle_events(context);
-                            action = Action::None;
+                            action = Action::PressedEnter;
                         }
                         _ => {
                             action = Action::None;
@@ -121,6 +119,12 @@ impl App {
             }
             Action::PressedBackspace => {
                 self.string_inputted.pop();
+                ActionResult::new(ActionStatus::Success, None)
+            }
+            Action::PressedEnter => {
+                self.string_inputted.push('\n');
+                self.handle_events(self.get_render_context());
+
                 ActionResult::new(ActionStatus::Success, None)
             }
             _ => self.game_controller.handle_action(action),

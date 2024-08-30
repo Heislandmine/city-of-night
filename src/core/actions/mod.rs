@@ -10,6 +10,7 @@ pub enum Action {
     Navigate(ViewsMode),
     InputChar(char),
     PressedBackspace,
+    PressedEnter,
     None,
 }
 
