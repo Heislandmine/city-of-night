@@ -6,7 +6,9 @@ use ratatui::{
 };
 
 use crate::core::{
-    actions::PurchaseCharacterAction, contexts::RenderContext, game_controller::GameController,
+    actions::{ActionResult, ActionStatus, PurchaseCharacterAction},
+    contexts::RenderContext,
+    game_controller::GameController,
     mode::ViewsMode,
 };
 use crate::{
@@ -63,32 +65,57 @@ impl App {
                 self.game_controller
                     .handle_action(Action::PurchaseCharacter(id));
             }
-            Action::None => {}
+            _ => {}
         }
     }
 
-    pub fn handle_key_events(&mut self, context: RenderContext) -> io::Result<()> {
+    pub fn handle_key_events(&mut self, context: RenderContext) -> io::Result<Action> {
+        let mut action: Action = Action::None;
+
         if event::poll(std::time::Duration::from_millis(16))? {
             if let event::Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press {
                     match key.code {
-                        KeyCode::Char('q') => self.quit(),
-                        KeyCode::Char('n') => self.view.navigate(ViewsMode::PurchaseCharacter),
-                        KeyCode::Char(c) => self.string_inputted.push(c),
+                        KeyCode::Char('q') => {
+                            action = Action::Quit;
+                        }
+                        KeyCode::Char('n') => {
+                            self.view.navigate(ViewsMode::PurchaseCharacter);
+                            action = Action::None;
+                        }
+                        KeyCode::Char(c) => {
+                            self.string_inputted.push(c);
+                            action = Action::None;
+                        }
                         KeyCode::Backspace => {
                             let _ = self.string_inputted.pop();
+                            action = Action::None;
                         }
                         KeyCode::Enter => {
                             self.string_inputted.push('\n');
-                            self.handle_events(context)
+                            self.handle_events(context);
+                            action = Action::None;
                         }
-                        _ => {}
+                        _ => {
+                            action = Action::None;
+                        }
                     }
                 }
             }
         }
 
-        Ok(())
+        Ok(action)
+    }
+
+    fn handle_action(&mut self, action: Action) {
+        match action {
+            Action::None => ActionResult::new(ActionStatus::None, None),
+            Action::Quit => {
+                self.quit();
+                ActionResult::new(ActionStatus::Success, None)
+            }
+            _ => self.game_controller.handle_action(action),
+        };
     }
 
     fn get_render_context(&self) -> RenderContext {
@@ -109,7 +136,9 @@ impl App {
                 self.render(frame, self.get_render_context());
             })?;
 
-            self.handle_key_events(self.get_render_context())?;
+            let action = self.handle_key_events(self.get_render_context())?;
+
+            let action_result = self.handle_action(action);
         }
 
         tui.exit()?;

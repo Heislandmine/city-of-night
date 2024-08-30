@@ -5,6 +5,7 @@ use super::{
 
 pub enum Action {
     PurchaseCharacter(String),
+    Quit,
     None,
 }
 

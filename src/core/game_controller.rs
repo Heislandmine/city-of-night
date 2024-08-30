@@ -35,7 +35,7 @@ impl GameController {
 
                 ActionResult::new(ActionStatus::Success, None)
             }
-            Action::None => ActionResult::new(ActionStatus::None, None),
+            _ => ActionResult::new(ActionStatus::None, None),
         }
     }
 
