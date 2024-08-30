@@ -9,6 +9,7 @@ pub enum Action {
     Quit,
     Navigate(ViewsMode),
     InputChar(char),
+    PressedBackspace,
     None,
 }
 
