@@ -77,7 +77,7 @@ impl Component for PurchaseCharacter {
 
         // ユーザー入力表示エリア
         let msg = match &self.context.message {
-            Some(s) => s.clone(),
+            Some(s) => s.content.clone(),
             None => "".to_string(),
         };
         frame.render_widget(Paragraph::new(msg), layouts[2]);

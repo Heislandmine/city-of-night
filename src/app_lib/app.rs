@@ -6,7 +6,7 @@ use ratatui::{
 };
 
 use crate::core::{
-    actions::{ActionResult, ActionStatus, KeyPressedEvent},
+    actions::{ActionResult, ActionStatus, KeyPressedEvent, TextMessage},
     contexts::RenderContext,
     game_controller::GameController,
     mode::ViewsMode,
@@ -126,11 +126,11 @@ impl App {
             }
             Action::PushToCharacterFromInputtedString(c) => {
                 self.string_inputted.push(c);
-                ActionResult::success(Some(self.string_inputted.clone()))
+                ActionResult::success(Some(TextMessage::new(self.string_inputted.clone(), false)))
             }
             Action::PopOneCharacterFromInputtedString => {
                 self.string_inputted.pop();
-                ActionResult::success(Some(self.string_inputted.clone()))
+                ActionResult::success(Some(TextMessage::new(self.string_inputted.clone(), false)))
             }
             _ => self.game_controller.handle_action(action),
         }

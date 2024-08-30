@@ -110,7 +110,7 @@ impl Home {
 impl Component for Home {
     fn render(&self, frame: &mut Frame) {
         let msg = match &self.context.message {
-            Some(s) => s.clone(),
+            Some(s) => s.content.clone(),
             None => String::new(),
         };
         self.render(frame, &msg);

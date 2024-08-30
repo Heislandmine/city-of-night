@@ -27,18 +27,33 @@ pub enum ActionStatus {
     None,
 }
 
+#[derive(Debug, PartialEq, Clone)]
+pub struct TextMessage {
+    pub content: String,
+    pub wait_enter_pressed: bool,
+}
+
+impl TextMessage {
+    pub fn new(content: String, wait_enter_pressed: bool) -> Self {
+        Self {
+            content,
+            wait_enter_pressed,
+        }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct ActionResult {
     pub status: ActionStatus,
-    pub message: Option<String>,
+    pub message: Option<TextMessage>,
 }
 
 impl ActionResult {
-    pub fn new(status: ActionStatus, message: Option<String>) -> Self {
+    pub fn new(status: ActionStatus, message: Option<TextMessage>) -> Self {
         Self { status, message }
     }
 
-    pub fn success(message: Option<String>) -> Self {
+    pub fn success(message: Option<TextMessage>) -> Self {
         ActionResult::new(ActionStatus::Success, message)
     }
 
@@ -66,7 +81,7 @@ impl<'a> PurchaseCharacterAction<'a> {
         self.game_world.add_character(created_character);
         self.user_inventory.add_character(character_id.clone());
 
-        ActionResult::success(Some(message))
+        ActionResult::success(Some(TextMessage::new(message, true)))
     }
 }
 
@@ -75,7 +90,7 @@ pub mod actions_test {
     #[cfg(test)]
     pub mod purchase_character_action {
         use crate::core::{
-            actions::{ActionResult, ActionStatus, PurchaseCharacterAction},
+            actions::{ActionResult, ActionStatus, PurchaseCharacterAction, TextMessage},
             game_data::{GameWorld, UserInventory},
         };
 
@@ -85,7 +100,10 @@ pub mod actions_test {
             let mut user_inventory = UserInventory::new(None);
             let character_id = "test-ko".to_string();
             let mut sut = PurchaseCharacterAction::new(&mut game_world, &mut user_inventory);
-            let expected = ActionResult::success(Some("テスト子を購入しました".to_string()));
+            let expected = ActionResult::success(Some(TextMessage::new(
+                "テスト子を購入しました".to_string(),
+                true,
+            )));
             let result = sut.execute(character_id.clone());
 
             assert_eq!(result, expected);

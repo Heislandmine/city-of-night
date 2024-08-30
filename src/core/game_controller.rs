@@ -99,7 +99,7 @@ pub mod test {
     #[cfg(test)]
     pub mod handle_action {
         use crate::core::{
-            actions::{Action, ActionResult, ActionStatus},
+            actions::{Action, ActionResult, ActionStatus, TextMessage},
             character_sheet::CharacterSheet,
             game_controller::GameController,
             game_data::{GameWorld, UserInventory},
@@ -109,7 +109,10 @@ pub mod test {
         pub fn purchase_character() {
             let purchased_character =
                 CharacterSheet::new("test-ko".to_string(), "テスト子".to_string(), 200);
-            let expected = ActionResult::success(Some("テスト子を購入しました".to_string()));
+            let expected = ActionResult::success(Some(TextMessage::new(
+                "テスト子を購入しました".to_string(),
+                true,
+            )));
             let character_sheets = vec![purchased_character.clone()];
             let mut sut = GameController::new(
                 UserInventory::new(None),
