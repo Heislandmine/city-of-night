@@ -1,8 +1,13 @@
-use super::game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory};
+use super::{
+    actions::{Action, ActionResult, ActionStatus, PurchaseCharacterAction},
+    character_sheet::CharacterSheet,
+    game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
+};
 
 pub struct GameController {
     user_inventory: UserInventory,
     world: GameWorld,
+    character_sheets: Vec<CharacterSheet>,
     character_list_available_for_purchase: Vec<CharactersAvailableForPurchase>,
 }
 
@@ -10,12 +15,27 @@ impl GameController {
     pub fn new(
         user_inventory: UserInventory,
         world: GameWorld,
+        character_sheets: Vec<CharacterSheet>,
         character_list_available_for_purchase: Vec<CharactersAvailableForPurchase>,
     ) -> Self {
         Self {
             user_inventory,
             world,
+            character_sheets,
             character_list_available_for_purchase,
+        }
+    }
+
+    pub fn handle_action(&mut self, action: Action) -> ActionResult {
+        match action {
+            Action::PurchaseCharacter(id) => {
+                let mut command =
+                    PurchaseCharacterAction::new(&mut self.world, &mut self.user_inventory);
+                command.execute(id);
+
+                ActionResult::new(ActionStatus::Success, None)
+            }
+            Action::None => ActionResult::new(ActionStatus::None, None),
         }
     }
 
@@ -69,11 +89,44 @@ pub mod test {
         let sut = GameController::new(
             UserInventory::new(Some(vec!["test".to_string()])),
             GameWorld::new(None),
+            Vec::new(),
             characters,
         );
 
         let result = sut.get_character_list_available_for_purchase();
 
         assert!(result.contains(&expected), "{:?}", result)
+    }
+
+    #[cfg(test)]
+    pub mod handle_action {
+        use crate::core::{
+            actions::{Action, ActionResult, ActionStatus},
+            character_sheet::CharacterSheet,
+            game_controller::GameController,
+            game_data::{GameWorld, UserInventory},
+        };
+
+        #[test]
+        pub fn purchase_character() {
+            let purchased_character =
+                CharacterSheet::new("test-ko".to_string(), "テスト子".to_string(), 200);
+            let expected = ActionResult::new(ActionStatus::Success, None);
+            let character_sheets = vec![purchased_character.clone()];
+            let mut sut = GameController::new(
+                UserInventory::new(None),
+                GameWorld::new(None),
+                character_sheets,
+                Vec::new(),
+            );
+            let action = Action::PurchaseCharacter(purchased_character.id());
+
+            let result = sut.handle_action(action);
+            assert_eq!(result, expected);
+            assert!(sut
+                .user_inventory
+                .is_character_owned(purchased_character.id()));
+            assert!(sut.world.is_character_exist(purchased_character.id()))
+        }
     }
 }

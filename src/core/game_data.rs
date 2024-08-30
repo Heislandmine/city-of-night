@@ -21,6 +21,10 @@ impl UserInventory {
     pub fn add_character(&mut self, character_id: String) {
         self.owned_characters.push(character_id);
     }
+
+    pub fn is_character_owned(&self, character_id: String) -> bool {
+        self.owned_characters.contains(&character_id)
+    }
 }
 
 pub struct GameWorld {
@@ -43,6 +47,16 @@ impl GameWorld {
 
     pub fn get_character_by_id(&self, character_id: String) -> Option<&Character> {
         self.characters.iter().find(|e| e.id() == character_id)
+    }
+
+    pub fn is_character_exist(&self, character_id: String) -> bool {
+        for character in self.characters.iter() {
+            if character.id() == character_id {
+                return true;
+            }
+        }
+
+        false
     }
 }
 
@@ -113,6 +127,13 @@ mod game_data_test {
 
             assert_eq!(sut.owned_characters()[0], character.id())
         }
+
+        #[test]
+        fn is_character_owned() {
+            let sut = UserInventory::new(Some(vec!["テスト".to_string()]));
+
+            assert!(sut.is_character_owned("テスト".to_string()));
+        }
     }
 
     #[cfg(test)]
@@ -122,7 +143,7 @@ mod game_data_test {
         use super::create_test_character;
 
         #[test]
-        fn add_character() {
+        pub fn add_character() {
             let character = create_test_character();
             let mut sut = GameWorld::new(None);
             let character_id = character.id();
@@ -132,6 +153,15 @@ mod game_data_test {
                 Some(e) => assert_eq!(e.id(), character_id),
                 None => assert!(false),
             }
+        }
+
+        #[test]
+        pub fn is_character_exist() {
+            let character = create_test_character();
+            let character_id = character.id();
+            let sut = GameWorld::new(Some(vec![character]));
+
+            assert!(sut.is_character_exist(character_id))
         }
     }
 }

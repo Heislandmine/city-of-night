@@ -13,7 +13,7 @@ use crate::{
     app_lib::tui::Tui,
     core::{
         actions::Action,
-        game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
+        game_data::{GameWorld, UserInventory},
     },
     ui::user_view::UserView,
 };
@@ -60,9 +60,8 @@ impl App {
 
         match action {
             Action::PurchaseCharacter(id) => {
-                let mut action =
-                    PurchaseCharacterAction::new(&mut self.game_world, &mut self.user_inventory);
-                action.execute(id);
+                self.game_controller
+                    .handle_action(Action::PurchaseCharacter(id));
             }
             Action::None => {}
         }
@@ -94,12 +93,8 @@ impl App {
 
     fn get_render_context(&self) -> RenderContext {
         let context = RenderContext::new(
-            vec![CharactersAvailableForPurchase::new(
-                "demo-ko".to_string(),
-                "1".to_string(),
-                "デモ子".to_string(),
-                2000,
-            )],
+            self.game_controller
+                .get_character_list_available_for_purchase(),
             self.string_inputted.clone(),
         );
 

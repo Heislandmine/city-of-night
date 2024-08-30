@@ -8,6 +8,25 @@ pub enum Action {
     None,
 }
 
+#[derive(Debug, PartialEq)]
+pub enum ActionStatus {
+    Success,
+    Failed,
+    None,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct ActionResult {
+    status: ActionStatus,
+    message: Option<String>,
+}
+
+impl ActionResult {
+    pub fn new(status: ActionStatus, message: Option<String>) -> Self {
+        Self { status, message }
+    }
+}
+
 pub struct PurchaseCharacterAction<'a> {
     game_world: &'a mut GameWorld,
     user_inventory: &'a mut UserInventory,

@@ -17,6 +17,7 @@ fn main() -> io::Result<()> {
     let controller = GameController::new(
         UserInventory::new(None),
         GameWorld::new(None),
+        Vec::new(),
         vec![CharactersAvailableForPurchase::new(
             "demo-ko".to_string(),
             "1".to_string(),

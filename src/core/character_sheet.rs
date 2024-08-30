@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct CharacterSheet {
     id: String,
     display_name: String,
