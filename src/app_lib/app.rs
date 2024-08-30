@@ -41,7 +41,7 @@ impl App {
             should_quit: false,
             user_inventory,
             game_world,
-            last_action_result: ActionResult::new(ActionStatus::None, None),
+            last_action_result: ActionResult::none(),
             game_controller,
             string_inputted: String::new(),
             view,
@@ -66,7 +66,7 @@ impl App {
             Action::PurchaseCharacter(id) => self
                 .game_controller
                 .handle_action(Action::PurchaseCharacter(id)),
-            _ => ActionResult::new(ActionStatus::None, None),
+            _ => ActionResult::none(),
         }
     }
 
@@ -115,22 +115,22 @@ impl App {
     }
     fn handle_action(&mut self, action: Action) -> ActionResult {
         match action {
-            Action::None => ActionResult::new(ActionStatus::None, None),
+            Action::None => ActionResult::none(),
             Action::Quit => {
                 self.quit();
-                ActionResult::new(ActionStatus::Success, None)
+                ActionResult::success(None)
             }
             Action::Navigate(view_id) => {
                 self.view.navigate(view_id);
-                ActionResult::new(ActionStatus::Success, None)
+                ActionResult::success(None)
             }
             Action::PushToCharacterFromInputtedString(c) => {
                 self.string_inputted.push(c);
-                ActionResult::new(ActionStatus::Success, Some(self.string_inputted.clone()))
+                ActionResult::success(Some(self.string_inputted.clone()))
             }
             Action::PopOneCharacterFromInputtedString => {
                 self.string_inputted.pop();
-                ActionResult::new(ActionStatus::Success, Some(self.string_inputted.clone()))
+                ActionResult::success(Some(self.string_inputted.clone()))
             }
             _ => self.game_controller.handle_action(action),
         }

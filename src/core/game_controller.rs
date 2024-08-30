@@ -33,7 +33,7 @@ impl GameController {
                     PurchaseCharacterAction::new(&mut self.world, &mut self.user_inventory);
                 command.execute(id)
             }
-            _ => ActionResult::new(ActionStatus::None, None),
+            _ => ActionResult::none(),
         }
     }
 
@@ -109,10 +109,7 @@ pub mod test {
         pub fn purchase_character() {
             let purchased_character =
                 CharacterSheet::new("test-ko".to_string(), "テスト子".to_string(), 200);
-            let expected = ActionResult::new(
-                ActionStatus::Success,
-                Some("テスト子を購入しました".to_string()),
-            );
+            let expected = ActionResult::success(Some("テスト子を購入しました".to_string()));
             let character_sheets = vec![purchased_character.clone()];
             let mut sut = GameController::new(
                 UserInventory::new(None),

@@ -37,6 +37,14 @@ impl ActionResult {
     pub fn new(status: ActionStatus, message: Option<String>) -> Self {
         Self { status, message }
     }
+
+    pub fn success(message: Option<String>) -> Self {
+        ActionResult::new(ActionStatus::Success, message)
+    }
+
+    pub fn none() -> Self {
+        ActionResult::new(ActionStatus::None, None)
+    }
 }
 
 pub struct PurchaseCharacterAction<'a> {
@@ -58,7 +66,7 @@ impl<'a> PurchaseCharacterAction<'a> {
         self.game_world.add_character(created_character);
         self.user_inventory.add_character(character_id.clone());
 
-        ActionResult::new(ActionStatus::Success, Some(message))
+        ActionResult::success(Some(message))
     }
 }
 
@@ -77,10 +85,7 @@ pub mod actions_test {
             let mut user_inventory = UserInventory::new(None);
             let character_id = "test-ko".to_string();
             let mut sut = PurchaseCharacterAction::new(&mut game_world, &mut user_inventory);
-            let expected = ActionResult::new(
-                ActionStatus::Success,
-                Some("テスト子を購入しました".to_string()),
-            );
+            let expected = ActionResult::success(Some("テスト子を購入しました".to_string()));
             let result = sut.execute(character_id.clone());
 
             assert_eq!(result, expected);
