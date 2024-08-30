@@ -80,8 +80,7 @@ impl App {
                             action = Action::Quit;
                         }
                         KeyCode::Char('n') => {
-                            self.view.navigate(ViewsMode::PurchaseCharacter);
-                            action = Action::None;
+                            action = Action::Navigate(ViewsMode::PurchaseCharacter);
                         }
                         KeyCode::Char(c) => {
                             self.string_inputted.push(c);
@@ -112,6 +111,10 @@ impl App {
             Action::None => ActionResult::new(ActionStatus::None, None),
             Action::Quit => {
                 self.quit();
+                ActionResult::new(ActionStatus::Success, None)
+            }
+            Action::Navigate(view_id) => {
+                self.view.navigate(view_id);
                 ActionResult::new(ActionStatus::Success, None)
             }
             _ => self.game_controller.handle_action(action),

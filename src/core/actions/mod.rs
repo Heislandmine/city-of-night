@@ -1,11 +1,13 @@
 use super::{
     character::Character,
     game_data::{GameWorld, UserInventory},
+    mode::ViewsMode,
 };
 
 pub enum Action {
     PurchaseCharacter(String),
     Quit,
+    Navigate(ViewsMode),
     None,
 }
 
