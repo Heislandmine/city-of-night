@@ -56,20 +56,6 @@ impl App {
         self.view.render(context, frame)
     }
 
-    fn handle_events(&mut self, context: RenderContext) -> ActionResult {
-        let current_view = self.view.get_current_view(context);
-
-        let user_input = String::from(self.string_inputted.clone().trim());
-        let action = current_view.handle_key_pressed_event(&user_input);
-
-        match action {
-            Action::PurchaseCharacter(id) => self
-                .game_controller
-                .handle_action(Action::PurchaseCharacter(id)),
-            _ => ActionResult::none(),
-        }
-    }
-
     pub fn handle_key_events(&mut self) -> io::Result<KeyPressedEvent> {
         let mut event: KeyPressedEvent = KeyPressedEvent::None;
 
@@ -104,7 +90,6 @@ impl App {
     ) -> Action {
         match key_pressed_event {
             KeyPressedEvent::KeyPressed('q') => Action::Quit,
-            KeyPressedEvent::KeyPressed('n') => Action::Navigate(ViewsMode::PurchaseCharacter),
             KeyPressedEvent::KeyPressed(c) => Action::PushToCharacterFromInputtedString(c),
             KeyPressedEvent::PressedBackspace => Action::PopOneCharacterFromInputtedString,
             KeyPressedEvent::PressedEnter(user_input) => {

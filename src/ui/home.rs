@@ -5,7 +5,10 @@ use ratatui::{
     Frame,
 };
 
-use crate::{core::contexts::RenderContext, ui::Component};
+use crate::{
+    core::{actions::Action, contexts::RenderContext, mode::ViewsMode},
+    ui::Component,
+};
 
 pub struct Home {
     context: RenderContext,
@@ -73,13 +76,18 @@ impl Home {
         );
 
         frame.render_widget(
-            Paragraph::new("[200]セーブ").centered(),
+            Paragraph::new("[101]奴隷購入").centered(),
             command_area_first_row[1],
         );
 
         frame.render_widget(
-            Paragraph::new("[300]ロード").centered(),
+            Paragraph::new("[200]セーブ").centered(),
             command_area_first_row[2],
+        );
+
+        frame.render_widget(
+            Paragraph::new("[300]ロード").centered(),
+            command_area_first_row[3],
         );
     }
 
@@ -117,6 +125,10 @@ impl Component for Home {
     }
 
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
-        crate::core::actions::Action::None
+        if *user_input == String::from("101") {
+            return Action::Navigate(ViewsMode::PurchaseCharacter);
+        } else {
+            return Action::None;
+        }
     }
 }
