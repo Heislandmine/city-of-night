@@ -1,5 +1,3 @@
-use uuid::Uuid;
-
 use super::{
     character::Character,
     game_data::{GameWorld, UserInventory},
@@ -26,19 +24,13 @@ pub enum ActionStatus {
 
 #[derive(Debug, PartialEq)]
 pub struct ActionResult {
-    pub id: Uuid,
     pub status: ActionStatus,
     pub message: Option<String>,
 }
 
 impl ActionResult {
     pub fn new(status: ActionStatus, message: Option<String>) -> Self {
-        let uuid = Uuid::new_v4();
-        Self {
-            id: uuid,
-            status,
-            message,
-        }
+        Self { status, message }
     }
 }
 
