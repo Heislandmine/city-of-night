@@ -4,7 +4,7 @@ use ratatui::{
 };
 
 use crate::{
-    core::{actions::Action, contexts::RenderContext},
+    core::{actions::Action, contexts::RenderContext, mode::ViewsMode},
     ui::Component,
 };
 
@@ -84,6 +84,10 @@ impl Component for PurchaseCharacter {
     }
 
     fn handle_key_pressed_event(&self, user_input: &String) -> Action {
+        if *user_input == String::from("999") {
+            return Action::Navigate(ViewsMode::Home);
+        }
+
         let character_for_purchase = self
             .context
             .character_list_available_for_purchase
