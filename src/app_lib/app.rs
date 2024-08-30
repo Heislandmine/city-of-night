@@ -83,8 +83,7 @@ impl App {
                             action = Action::Navigate(ViewsMode::PurchaseCharacter);
                         }
                         KeyCode::Char(c) => {
-                            self.string_inputted.push(c);
-                            action = Action::None;
+                            action = Action::InputChar(c);
                         }
                         KeyCode::Backspace => {
                             let _ = self.string_inputted.pop();
@@ -115,6 +114,10 @@ impl App {
             }
             Action::Navigate(view_id) => {
                 self.view.navigate(view_id);
+                ActionResult::new(ActionStatus::Success, None)
+            }
+            Action::InputChar(c) => {
+                self.string_inputted.push(c);
                 ActionResult::new(ActionStatus::Success, None)
             }
             _ => self.game_controller.handle_action(action),

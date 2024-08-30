@@ -8,6 +8,7 @@ pub enum Action {
     PurchaseCharacter(String),
     Quit,
     Navigate(ViewsMode),
+    InputChar(char),
     None,
 }
 
