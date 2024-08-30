@@ -6,7 +6,7 @@ use ratatui::{
 };
 
 use crate::core::{
-    actions::{ActionResult, ActionStatus, PurchaseCharacterAction},
+    actions::{ActionResult, ActionStatus, KeyPressedEvent},
     contexts::RenderContext,
     game_controller::GameController,
     mode::ViewsMode,
@@ -70,39 +70,49 @@ impl App {
         }
     }
 
-    pub fn handle_key_events(&mut self, context: RenderContext) -> io::Result<Action> {
-        let mut action: Action = Action::None;
+    pub fn handle_key_events(&mut self) -> io::Result<KeyPressedEvent> {
+        let mut event: KeyPressedEvent = KeyPressedEvent::None;
 
         if event::poll(std::time::Duration::from_millis(16))? {
             if let event::Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press {
                     match key.code {
-                        KeyCode::Char('q') => {
-                            action = Action::Quit;
-                        }
-                        KeyCode::Char('n') => {
-                            action = Action::Navigate(ViewsMode::PurchaseCharacter);
-                        }
                         KeyCode::Char(c) => {
-                            action = Action::InputChar(c);
+                            event = KeyPressedEvent::KeyPressed(c);
                         }
                         KeyCode::Backspace => {
-                            action = Action::PressedBackspace;
+                            event = KeyPressedEvent::PressedBackspace;
                         }
                         KeyCode::Enter => {
-                            action = Action::PressedEnter;
+                            event = KeyPressedEvent::PressedEnter(self.string_inputted.clone());
                         }
                         _ => {
-                            action = Action::None;
+                            event = KeyPressedEvent::None;
                         }
                     }
                 }
             }
         }
 
-        Ok(action)
+        Ok(event)
     }
 
+    fn handle_key_pressed_event(
+        &mut self,
+        key_pressed_event: KeyPressedEvent,
+        context: RenderContext,
+    ) -> Action {
+        match key_pressed_event {
+            KeyPressedEvent::KeyPressed('q') => Action::Quit,
+            KeyPressedEvent::KeyPressed('n') => Action::Navigate(ViewsMode::PurchaseCharacter),
+            KeyPressedEvent::KeyPressed(c) => Action::PushToCharacterFromInputtedString(c),
+            KeyPressedEvent::PressedBackspace => Action::PopOneCharacterFromInputtedString,
+            KeyPressedEvent::PressedEnter(user_input) => {
+                self.view.handle_key_pressed_event(context, user_input)
+            }
+            KeyPressedEvent::None => Action::None,
+        }
+    }
     fn handle_action(&mut self, action: Action) -> ActionResult {
         match action {
             Action::None => ActionResult::new(ActionStatus::None, None),
@@ -114,17 +124,13 @@ impl App {
                 self.view.navigate(view_id);
                 ActionResult::new(ActionStatus::Success, None)
             }
-            Action::InputChar(c) => {
+            Action::PushToCharacterFromInputtedString(c) => {
                 self.string_inputted.push(c);
                 ActionResult::new(ActionStatus::Success, Some(self.string_inputted.clone()))
             }
-            Action::PressedBackspace => {
+            Action::PopOneCharacterFromInputtedString => {
                 self.string_inputted.pop();
                 ActionResult::new(ActionStatus::Success, Some(self.string_inputted.clone()))
-            }
-            Action::PressedEnter => {
-                self.string_inputted.push('\n');
-                self.handle_events(self.get_render_context())
             }
             _ => self.game_controller.handle_action(action),
         }
@@ -148,7 +154,10 @@ impl App {
                 self.render(frame, self.get_render_context());
             })?;
 
-            let action = self.handle_key_events(self.get_render_context())?;
+            let key_pressed_event = self.handle_key_events()?;
+
+            let action =
+                self.handle_key_pressed_event(key_pressed_event, self.get_render_context());
 
             let action_result = self.handle_action(action);
 

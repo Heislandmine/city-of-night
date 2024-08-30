@@ -1,6 +1,6 @@
 use ratatui::Frame;
 
-use crate::core::{contexts::RenderContext, mode::ViewsMode};
+use crate::core::{actions::Action, contexts::RenderContext, mode::ViewsMode};
 
 use super::{home::Home, purchase_character::PurchaseCharacter, Component};
 
@@ -43,5 +43,15 @@ impl UserView {
             ViewsMode::Home => Box::new(Home::new(context)),
             ViewsMode::PurchaseCharacter => Box::new(PurchaseCharacter::new(context)),
         }
+    }
+
+    pub fn handle_key_pressed_event(
+        &mut self,
+        context: RenderContext,
+        user_input: String,
+    ) -> Action {
+        let current_view = self.get_current_view(context);
+
+        current_view.handle_event(&user_input)
     }
 }

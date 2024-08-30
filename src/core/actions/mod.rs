@@ -4,15 +4,20 @@ use super::{
     mode::ViewsMode,
 };
 
+pub enum KeyPressedEvent {
+    None,
+    KeyPressed(char),
+    PressedBackspace,
+    PressedEnter(String),
+}
 pub enum Action {
+    None,
+    PopOneCharacterFromInputtedString,
+    PushToCharacterFromInputtedString(char),
     PurchaseCharacter(String),
     Quit,
     Navigate(ViewsMode),
-    InputChar(char),
-    PressedBackspace,
-    PressedEnter,
     ResetMessage,
-    None,
 }
 
 #[derive(Debug, PartialEq)]
