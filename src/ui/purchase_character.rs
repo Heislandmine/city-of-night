@@ -83,7 +83,7 @@ impl Component for PurchaseCharacter {
         frame.render_widget(Paragraph::new(msg), layouts[2]);
     }
 
-    fn handle_event(&self, user_input: &String) -> Action {
+    fn handle_key_pressed_event(&self, user_input: &String) -> Action {
         let character_for_purchase = self
             .context
             .character_list_available_for_purchase

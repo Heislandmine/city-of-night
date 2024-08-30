@@ -7,5 +7,5 @@ pub mod user_view;
 
 pub trait Component {
     fn render(&self, frame: &mut Frame);
-    fn handle_event(&self, user_input: &String) -> Action;
+    fn handle_key_pressed_event(&self, user_input: &String) -> Action;
 }

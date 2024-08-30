@@ -60,7 +60,7 @@ impl App {
         let current_view = self.view.get_current_view(context);
 
         let user_input = String::from(self.string_inputted.clone().trim());
-        let action = current_view.handle_event(&user_input);
+        let action = current_view.handle_key_pressed_event(&user_input);
 
         match action {
             Action::PurchaseCharacter(id) => self

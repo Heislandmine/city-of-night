@@ -52,6 +52,6 @@ impl UserView {
     ) -> Action {
         let current_view = self.get_current_view(context);
 
-        current_view.handle_event(&user_input)
+        current_view.handle_key_pressed_event(&user_input)
     }
 }

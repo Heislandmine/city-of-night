@@ -116,7 +116,7 @@ impl Component for Home {
         self.render(frame, &msg);
     }
 
-    fn handle_event(&self, user_input: &String) -> crate::core::actions::Action {
+    fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
         crate::core::actions::Action::None
     }
 }
