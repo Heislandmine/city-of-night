@@ -58,8 +58,9 @@ impl Component for PurchaseCharacter {
         {
             let name = v.display_name();
             let call_id = v.call_id();
+            let price = v.price();
             frame.render_widget(
-                Paragraph::new(format!("[{call_id}]{name}")),
+                Paragraph::new(format!("[{call_id}]{name} {price}G")),
                 command_area_raws[i],
             );
         }
