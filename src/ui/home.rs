@@ -109,7 +109,11 @@ impl Home {
 
 impl Component for Home {
     fn render(&self, frame: &mut Frame) {
-        self.render(frame, &self.context.string_user_inputted);
+        let msg = match &self.context.message {
+            Some(s) => s.clone(),
+            None => String::new(),
+        };
+        self.render(frame, &msg);
     }
 
     fn handle_event(&self, user_input: &String) -> crate::core::actions::Action {

@@ -1,3 +1,5 @@
+use uuid::Uuid;
+
 use super::{
     character::Character,
     game_data::{GameWorld, UserInventory},
@@ -11,6 +13,7 @@ pub enum Action {
     InputChar(char),
     PressedBackspace,
     PressedEnter,
+    ResetMessage,
     None,
 }
 
@@ -23,13 +26,19 @@ pub enum ActionStatus {
 
 #[derive(Debug, PartialEq)]
 pub struct ActionResult {
-    status: ActionStatus,
-    message: Option<String>,
+    pub id: Uuid,
+    pub status: ActionStatus,
+    pub message: Option<String>,
 }
 
 impl ActionResult {
     pub fn new(status: ActionStatus, message: Option<String>) -> Self {
-        Self { status, message }
+        let uuid = Uuid::new_v4();
+        Self {
+            id: uuid,
+            status,
+            message,
+        }
     }
 }
 
@@ -46,10 +55,13 @@ impl<'a> PurchaseCharacterAction<'a> {
         }
     }
 
-    pub fn execute(&mut self, character_id: String) {
-        self.game_world
-            .add_character(Character::new(character_id.clone(), "テスト子".to_string()));
+    pub fn execute(&mut self, character_id: String) -> ActionResult {
+        let created_character = Character::new(character_id.clone(), "テスト子".to_string());
+        let message = format!("{}を購入しました", created_character.display_name());
+        self.game_world.add_character(created_character);
         self.user_inventory.add_character(character_id.clone());
+
+        ActionResult::new(ActionStatus::Success, Some(message))
     }
 }
 
@@ -58,7 +70,7 @@ pub mod actions_test {
     #[cfg(test)]
     pub mod purchase_character_action {
         use crate::core::{
-            actions::PurchaseCharacterAction,
+            actions::{ActionResult, ActionStatus, PurchaseCharacterAction},
             game_data::{GameWorld, UserInventory},
         };
 
@@ -68,8 +80,13 @@ pub mod actions_test {
             let mut user_inventory = UserInventory::new(None);
             let character_id = "test-ko".to_string();
             let mut sut = PurchaseCharacterAction::new(&mut game_world, &mut user_inventory);
+            let expected = ActionResult::new(
+                ActionStatus::Success,
+                Some("テスト子を購入しました".to_string()),
+            );
+            let result = sut.execute(character_id.clone());
 
-            sut.execute(character_id.clone());
+            assert_eq!(result, expected);
 
             // キャラクター生成の確認
             match game_world.get_character_by_id(character_id.clone()) {

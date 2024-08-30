@@ -76,10 +76,11 @@ impl Component for PurchaseCharacter {
         frame.render_widget(Paragraph::new("[999]戻る"), footer_command_area[0]);
 
         // ユーザー入力表示エリア
-        frame.render_widget(
-            Paragraph::new(self.context.string_user_inputted.clone()),
-            layouts[2],
-        );
+        let msg = match &self.context.message {
+            Some(s) => s.clone(),
+            None => "".to_string(),
+        };
+        frame.render_widget(Paragraph::new(msg), layouts[2]);
     }
 
     fn handle_event(&self, user_input: &String) -> Action {

@@ -23,6 +23,7 @@ use crate::{
 pub struct App {
     should_quit: bool,
     string_inputted: String,
+    last_action_result: ActionResult,
     game_controller: GameController,
     user_inventory: UserInventory,
     game_world: GameWorld,
@@ -40,6 +41,7 @@ impl App {
             should_quit: false,
             user_inventory,
             game_world,
+            last_action_result: ActionResult::new(ActionStatus::None, None),
             game_controller,
             string_inputted: String::new(),
             view,
@@ -54,18 +56,17 @@ impl App {
         self.view.render(context, frame)
     }
 
-    fn handle_events(&mut self, context: RenderContext) {
+    fn handle_events(&mut self, context: RenderContext) -> ActionResult {
         let current_view = self.view.get_current_view(context);
 
         let user_input = String::from(self.string_inputted.clone().trim());
         let action = current_view.handle_event(&user_input);
 
         match action {
-            Action::PurchaseCharacter(id) => {
-                self.game_controller
-                    .handle_action(Action::PurchaseCharacter(id));
-            }
-            _ => {}
+            Action::PurchaseCharacter(id) => self
+                .game_controller
+                .handle_action(Action::PurchaseCharacter(id)),
+            _ => ActionResult::new(ActionStatus::None, None),
         }
     }
 
@@ -102,7 +103,7 @@ impl App {
         Ok(action)
     }
 
-    fn handle_action(&mut self, action: Action) {
+    fn handle_action(&mut self, action: Action) -> ActionResult {
         match action {
             Action::None => ActionResult::new(ActionStatus::None, None),
             Action::Quit => {
@@ -115,27 +116,25 @@ impl App {
             }
             Action::InputChar(c) => {
                 self.string_inputted.push(c);
-                ActionResult::new(ActionStatus::Success, None)
+                ActionResult::new(ActionStatus::Success, Some(self.string_inputted.clone()))
             }
             Action::PressedBackspace => {
                 self.string_inputted.pop();
-                ActionResult::new(ActionStatus::Success, None)
+                ActionResult::new(ActionStatus::Success, Some(self.string_inputted.clone()))
             }
             Action::PressedEnter => {
                 self.string_inputted.push('\n');
-                self.handle_events(self.get_render_context());
-
-                ActionResult::new(ActionStatus::Success, None)
+                self.handle_events(self.get_render_context())
             }
             _ => self.game_controller.handle_action(action),
-        };
+        }
     }
 
     fn get_render_context(&self) -> RenderContext {
         let context = RenderContext::new(
             self.game_controller
                 .get_character_list_available_for_purchase(),
-            self.string_inputted.clone(),
+            self.last_action_result.message.clone(),
         );
 
         context
@@ -152,6 +151,11 @@ impl App {
             let action = self.handle_key_events(self.get_render_context())?;
 
             let action_result = self.handle_action(action);
+
+            match action_result.status {
+                ActionStatus::None => (),
+                _ => self.last_action_result = action_result,
+            }
         }
 
         tui.exit()?;
