@@ -132,6 +132,10 @@ impl App {
                 self.string_inputted.pop();
                 ActionResult::success(Some(TextMessage::new(self.string_inputted.clone(), false)))
             }
+            Action::ResetMessage => {
+                self.string_inputted.clear();
+                ActionResult::success(Some(TextMessage::new(self.string_inputted.clone(), false)))
+            }
             _ => self.game_controller.handle_action(action),
         }
     }
