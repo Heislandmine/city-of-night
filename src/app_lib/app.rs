@@ -71,6 +71,7 @@ impl App {
                         }
                         KeyCode::Enter => {
                             event = KeyPressedEvent::PressedEnter(self.string_inputted.clone());
+                            self.string_inputted.clear();
                         }
                         _ => {
                             event = KeyPressedEvent::None;
