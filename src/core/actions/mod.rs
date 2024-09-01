@@ -1,5 +1,7 @@
 use super::{
     character::Character,
+    character_sheet::CharacterSheet,
+    factories::create_character,
     game_data::{GameWorld, UserInventory},
     mode::ViewsMode,
 };
@@ -65,23 +67,48 @@ impl ActionResult {
 pub struct PurchaseCharacterAction<'a> {
     game_world: &'a mut GameWorld,
     user_inventory: &'a mut UserInventory,
+    character_sheets: &'a Vec<CharacterSheet>,
 }
 
 impl<'a> PurchaseCharacterAction<'a> {
-    pub fn new(game_world: &'a mut GameWorld, user_inventory: &'a mut UserInventory) -> Self {
+    pub fn new(
+        game_world: &'a mut GameWorld,
+        user_inventory: &'a mut UserInventory,
+        character_sheets: &'a Vec<CharacterSheet>,
+    ) -> Self {
         Self {
             game_world,
             user_inventory,
+            character_sheets,
         }
     }
 
     pub fn execute(&mut self, character_id: String) -> ActionResult {
-        let created_character = Character::new(character_id.clone(), "テスト子".to_string());
-        let message = format!("{}を購入しました", created_character.display_name());
-        self.game_world.add_character(created_character);
-        self.user_inventory.add_character(character_id.clone());
+        let target_sheet = self
+            .character_sheets
+            .iter()
+            .find(|e| e.id() == character_id);
 
-        ActionResult::success(Some(TextMessage::new(message, true)))
+        match target_sheet {
+            Some(sheet) => {
+                let created_character = create_character(sheet.clone());
+                let message = format!("{}を購入しました", created_character.display_name());
+                self.game_world.add_character(created_character);
+                self.user_inventory.add_character(character_id.clone());
+
+                ActionResult::success(Some(TextMessage::new(message, true)))
+            }
+            None => ActionResult::new(
+                ActionStatus::Failed,
+                Some(TextMessage::new(
+                    String::from(format!(
+                        "id:{}を持つキャラクターシートがありません。",
+                        character_id
+                    )),
+                    true,
+                )),
+            ),
+        }
     }
 }
 
@@ -93,6 +120,7 @@ pub mod actions_test {
 
         use crate::core::{
             actions::{ActionResult, ActionStatus, PurchaseCharacterAction, TextMessage},
+            character_sheet::CharacterSheet,
             game_data::{GameWorld, UserInventory},
         };
 
@@ -106,9 +134,15 @@ pub mod actions_test {
             true,
         ))))]
         fn execute(#[case] character_id: String, #[case] expected: ActionResult) {
+            let sheets = vec![
+                CharacterSheet::new("test-ko".to_string(), "テスト子".to_string(), 200),
+                CharacterSheet::new("test-ko-2".to_string(), "テスト2子".to_string(), 200),
+            ];
+
             let mut game_world = GameWorld::new(None);
             let mut user_inventory = UserInventory::new(None);
-            let mut sut = PurchaseCharacterAction::new(&mut game_world, &mut user_inventory);
+            let mut sut =
+                PurchaseCharacterAction::new(&mut game_world, &mut user_inventory, &sheets);
             let result = sut.execute(character_id.clone());
 
             assert_eq!(result, expected);
