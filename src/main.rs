@@ -1,6 +1,7 @@
 use app_lib::app::App;
 use app_lib::tui::Tui;
 use core::{
+    character_sheet::CharacterSheet,
     game_controller::GameController,
     game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
 };
@@ -17,7 +18,11 @@ fn main() -> io::Result<()> {
     let controller = GameController::new(
         UserInventory::new(None),
         GameWorld::new(None),
-        Vec::new(),
+        vec![CharacterSheet::new(
+            "demo-ko".to_string(),
+            "デモ子".to_string(),
+            2000,
+        )],
         vec![CharactersAvailableForPurchase::new(
             "demo-ko".to_string(),
             "1".to_string(),
