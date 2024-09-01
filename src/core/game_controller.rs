@@ -29,8 +29,11 @@ impl GameController {
     pub fn handle_action(&mut self, action: Action) -> ActionResult {
         match action {
             Action::PurchaseCharacter(id) => {
-                let mut command =
-                    PurchaseCharacterAction::new(&mut self.world, &mut self.user_inventory);
+                let mut command = PurchaseCharacterAction::new(
+                    &mut self.world,
+                    &mut self.user_inventory,
+                    &self.character_sheets,
+                );
                 command.execute(id)
             }
             _ => ActionResult::none(),

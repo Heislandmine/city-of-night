@@ -89,21 +89,26 @@ impl<'a> PurchaseCharacterAction<'a> {
 pub mod actions_test {
     #[cfg(test)]
     pub mod purchase_character_action {
+        use rstest::rstest;
+
         use crate::core::{
             actions::{ActionResult, ActionStatus, PurchaseCharacterAction, TextMessage},
             game_data::{GameWorld, UserInventory},
         };
 
-        #[test]
-        fn execute() {
+        #[rstest]
+        #[case("test-ko".to_string(), ActionResult::success(Some(TextMessage::new(
+            "テスト子を購入しました".to_string(),
+            true,
+        ))))]
+        #[case("test-ko-2".to_string(), ActionResult::success(Some(TextMessage::new(
+            "テスト2子を購入しました".to_string(),
+            true,
+        ))))]
+        fn execute(#[case] character_id: String, #[case] expected: ActionResult) {
             let mut game_world = GameWorld::new(None);
             let mut user_inventory = UserInventory::new(None);
-            let character_id = "test-ko".to_string();
             let mut sut = PurchaseCharacterAction::new(&mut game_world, &mut user_inventory);
-            let expected = ActionResult::success(Some(TextMessage::new(
-                "テスト子を購入しました".to_string(),
-                true,
-            )));
             let result = sut.execute(character_id.clone());
 
             assert_eq!(result, expected);
