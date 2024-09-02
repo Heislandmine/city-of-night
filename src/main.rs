@@ -29,6 +29,7 @@ fn main() -> io::Result<()> {
             "デモ子".to_string(),
             2000,
         )],
+        Vec::new(),
     );
     let mut app = App::new(
         UserInventory::new(None),

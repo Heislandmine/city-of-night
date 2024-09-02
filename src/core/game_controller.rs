@@ -1,5 +1,6 @@
 use super::{
     actions::{Action, ActionResult, ActionStatus, PurchaseCharacterAction},
+    call_id::CallId,
     character_sheet::CharacterSheet,
     game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
 };
@@ -9,6 +10,7 @@ pub struct GameController {
     world: GameWorld,
     character_sheets: Vec<CharacterSheet>,
     character_list_available_for_purchase: Vec<CharactersAvailableForPurchase>,
+    call_ids: Vec<CallId>,
 }
 
 impl GameController {
@@ -17,12 +19,14 @@ impl GameController {
         world: GameWorld,
         character_sheets: Vec<CharacterSheet>,
         character_list_available_for_purchase: Vec<CharactersAvailableForPurchase>,
+        call_ids: Vec<CallId>,
     ) -> Self {
         Self {
             user_inventory,
             world,
             character_sheets,
             character_list_available_for_purchase,
+            call_ids,
         }
     }
 
@@ -41,25 +45,29 @@ impl GameController {
     }
 
     pub fn get_character_list_available_for_purchase(&self) -> Vec<CharactersAvailableForPurchase> {
-        let filtered_list = self
-            .character_list_available_for_purchase
-            .iter()
-            .filter(|character| {
-                !self
-                    .user_inventory
-                    .owned_characters()
-                    .contains(&character.id())
-            });
+        let mut filtered_list = self.character_sheets.iter().filter(|character| {
+            !self
+                .user_inventory
+                .owned_characters()
+                .contains(&character.id())
+        });
 
         let mut result = Vec::new();
 
-        for character in filtered_list {
-            result.push(CharactersAvailableForPurchase::new(
-                character.id(),
-                character.call_id(),
-                character.display_name(),
-                character.price(),
-            ));
+        for call_id in self.call_ids.iter() {
+            let target_character = filtered_list.find(|e| e.id() == call_id.target_item_id());
+
+            match target_character {
+                Some(character) => {
+                    result.push(CharactersAvailableForPurchase::new(
+                        character.id(),
+                        call_id.id(),
+                        character.display_name(),
+                        character.price(),
+                    ));
+                }
+                None => {}
+            }
         }
 
         result
@@ -68,9 +76,41 @@ impl GameController {
 
 #[cfg(test)]
 pub mod test {
-    use crate::core::game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory};
+    use crate::core::{
+        call_id::CallId,
+        character_sheet::CharacterSheet,
+        game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
+    };
 
     use super::GameController;
+
+    #[test]
+    fn character_list_available_for_purchase_created_from_call_ids_and_sheets() {
+        let expected = CharactersAvailableForPurchase::new(
+            "expected".to_string(),
+            "1".to_string(),
+            "期待子".to_string(),
+            200,
+        );
+        let call_ids = vec![CallId::new("1", "expected")];
+        let sheets = vec![CharacterSheet::new(
+            "expected".to_string(),
+            "期待子".to_string(),
+            200,
+        )];
+
+        let sut = GameController::new(
+            UserInventory::new(None),
+            GameWorld::new(None),
+            sheets,
+            Vec::new(),
+            call_ids,
+        );
+
+        let result = sut.get_character_list_available_for_purchase();
+
+        assert!(result.contains(&expected), "{:?}", result)
+    }
 
     #[test]
     pub fn get_character_list_available_for_purchase() {
@@ -90,8 +130,12 @@ pub mod test {
         let sut = GameController::new(
             UserInventory::new(Some(vec!["test".to_string()])),
             GameWorld::new(None),
-            Vec::new(),
+            vec![
+                CharacterSheet::new("expected".to_string(), "期待子".to_string(), 200),
+                CharacterSheet::new("test".to_string(), "テスト子".to_string(), 200),
+            ],
             characters,
+            vec![CallId::new("1", "expected"), CallId::new("2", "test")],
         );
 
         let result = sut.get_character_list_available_for_purchase();
@@ -103,6 +147,7 @@ pub mod test {
     pub mod handle_action {
         use crate::core::{
             actions::{Action, ActionResult, ActionStatus, TextMessage},
+            call_id::CallId,
             character_sheet::CharacterSheet,
             game_controller::GameController,
             game_data::{GameWorld, UserInventory},
@@ -121,6 +166,7 @@ pub mod test {
                 UserInventory::new(None),
                 GameWorld::new(None),
                 character_sheets,
+                Vec::new(),
                 Vec::new(),
             );
             let action = Action::PurchaseCharacter(purchased_character.id());
