@@ -9,7 +9,7 @@ pub struct GameController {
     user_inventory: UserInventory,
     world: GameWorld,
     character_sheets: Vec<CharacterSheet>,
-    call_ids: Vec<CallId>,
+    purchase_character_call_ids: Vec<CallId>,
 }
 
 impl GameController {
@@ -23,7 +23,7 @@ impl GameController {
             user_inventory,
             world,
             character_sheets,
-            call_ids,
+            purchase_character_call_ids: call_ids,
         }
     }
 
@@ -51,7 +51,7 @@ impl GameController {
 
         let mut result = Vec::new();
 
-        for call_id in self.call_ids.iter() {
+        for call_id in self.purchase_character_call_ids.iter() {
             let target_character = filtered_list.find(|e| e.id() == call_id.target_item_id());
 
             match target_character {
