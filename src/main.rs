@@ -4,7 +4,7 @@ use core::{
     call_id::CallId,
     character_sheet::CharacterSheet,
     game_controller::GameController,
-    game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
+    game_data::{GameWorld, UserInventory},
 };
 use std::io::{self};
 use ui::user_view::UserView;

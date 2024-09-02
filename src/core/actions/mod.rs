@@ -1,5 +1,4 @@
 use super::{
-    character::Character,
     character_sheet::CharacterSheet,
     factories::create_character,
     game_data::{GameWorld, UserInventory},
@@ -119,7 +118,7 @@ pub mod actions_test {
         use rstest::rstest;
 
         use crate::core::{
-            actions::{ActionResult, ActionStatus, PurchaseCharacterAction, TextMessage},
+            actions::{ActionResult, PurchaseCharacterAction, TextMessage},
             character_sheet::CharacterSheet,
             game_data::{GameWorld, UserInventory},
         };

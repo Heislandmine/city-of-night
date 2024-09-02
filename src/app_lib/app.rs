@@ -9,7 +9,6 @@ use crate::core::{
     actions::{ActionResult, ActionStatus, KeyPressedEvent, TextMessage},
     contexts::RenderContext,
     game_controller::GameController,
-    mode::ViewsMode,
 };
 use crate::{
     app_lib::tui::Tui,

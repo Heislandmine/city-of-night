@@ -1,5 +1,5 @@
 use super::{
-    actions::{Action, ActionResult, ActionStatus, PurchaseCharacterAction},
+    actions::{Action, ActionResult, PurchaseCharacterAction},
     call_id::CallId,
     character_sheet::CharacterSheet,
     game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
@@ -141,8 +141,7 @@ pub mod test {
     #[cfg(test)]
     pub mod handle_action {
         use crate::core::{
-            actions::{Action, ActionResult, ActionStatus, TextMessage},
-            call_id::CallId,
+            actions::{Action, ActionResult, TextMessage},
             character_sheet::CharacterSheet,
             game_controller::GameController,
             game_data::{GameWorld, UserInventory},
