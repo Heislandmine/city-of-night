@@ -1,6 +1,7 @@
 use app_lib::app::App;
 use app_lib::tui::Tui;
 use core::{
+    call_id::CallId,
     character_sheet::CharacterSheet,
     game_controller::GameController,
     game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
@@ -23,7 +24,7 @@ fn main() -> io::Result<()> {
             "デモ子".to_string(),
             2000,
         )],
-        Vec::new(),
+        vec![CallId::new("1", "demo-ko")],
     );
     let mut app = App::new(
         UserInventory::new(None),
