@@ -24,15 +24,13 @@ pub struct App {
     string_inputted: String,
     last_action_result: ActionResult,
     game_controller: GameController,
-    game_world: GameWorld,
     view: UserView,
 }
 
 impl App {
-    pub fn new(game_world: GameWorld, game_controller: GameController, view: UserView) -> Self {
+    pub fn new(game_controller: GameController, view: UserView) -> Self {
         Self {
             should_quit: false,
-            game_world,
             last_action_result: ActionResult::none(),
             game_controller,
             string_inputted: String::new(),

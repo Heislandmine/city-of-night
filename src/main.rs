@@ -26,7 +26,7 @@ fn main() -> io::Result<()> {
         )],
         vec![CallId::new("1", "demo-ko")],
     );
-    let mut app = App::new(GameWorld::new(None), controller, view);
+    let mut app = App::new(controller, view);
     app.run(tui)?;
 
     Ok(())
