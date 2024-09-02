@@ -9,7 +9,6 @@ pub struct GameController {
     user_inventory: UserInventory,
     world: GameWorld,
     character_sheets: Vec<CharacterSheet>,
-    character_list_available_for_purchase: Vec<CharactersAvailableForPurchase>,
     call_ids: Vec<CallId>,
 }
 
@@ -18,14 +17,12 @@ impl GameController {
         user_inventory: UserInventory,
         world: GameWorld,
         character_sheets: Vec<CharacterSheet>,
-        character_list_available_for_purchase: Vec<CharactersAvailableForPurchase>,
         call_ids: Vec<CallId>,
     ) -> Self {
         Self {
             user_inventory,
             world,
             character_sheets,
-            character_list_available_for_purchase,
             call_ids,
         }
     }
@@ -103,7 +100,6 @@ pub mod test {
             UserInventory::new(None),
             GameWorld::new(None),
             sheets,
-            Vec::new(),
             call_ids,
         );
 
@@ -126,7 +122,6 @@ pub mod test {
             "テスト子".to_string(),
             200,
         );
-        let characters = vec![expected.clone(), expected_not_includes.clone()];
         let sut = GameController::new(
             UserInventory::new(Some(vec!["test".to_string()])),
             GameWorld::new(None),
@@ -134,13 +129,13 @@ pub mod test {
                 CharacterSheet::new("expected".to_string(), "期待子".to_string(), 200),
                 CharacterSheet::new("test".to_string(), "テスト子".to_string(), 200),
             ],
-            characters,
             vec![CallId::new("1", "expected"), CallId::new("2", "test")],
         );
 
         let result = sut.get_character_list_available_for_purchase();
 
-        assert!(result.contains(&expected), "{:?}", result)
+        assert!(result.contains(&expected), "{:?}", result);
+        assert!(!result.contains(&expected_not_includes));
     }
 
     #[cfg(test)]
@@ -166,7 +161,6 @@ pub mod test {
                 UserInventory::new(None),
                 GameWorld::new(None),
                 character_sheets,
-                Vec::new(),
                 Vec::new(),
             );
             let action = Action::PurchaseCharacter(purchased_character.id());

@@ -23,12 +23,6 @@ fn main() -> io::Result<()> {
             "デモ子".to_string(),
             2000,
         )],
-        vec![CharactersAvailableForPurchase::new(
-            "demo-ko".to_string(),
-            "1".to_string(),
-            "デモ子".to_string(),
-            2000,
-        )],
         Vec::new(),
     );
     let mut app = App::new(
