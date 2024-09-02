@@ -10,14 +10,7 @@ use crate::core::{
     contexts::RenderContext,
     game_controller::GameController,
 };
-use crate::{
-    app_lib::tui::Tui,
-    core::{
-        actions::Action,
-        game_data::{GameWorld, UserInventory},
-    },
-    ui::user_view::UserView,
-};
+use crate::{app_lib::tui::Tui, core::actions::Action, ui::user_view::UserView};
 
 pub struct App {
     should_quit: bool,
