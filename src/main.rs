@@ -23,6 +23,7 @@ fn main() -> io::Result<()> {
             "demo-ko".to_string(),
             "デモ子".to_string(),
             2000,
+            1200,
         )],
         vec![CallId::new("1", "demo-ko")],
     );

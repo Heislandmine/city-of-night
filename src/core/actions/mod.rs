@@ -134,8 +134,8 @@ pub mod actions_test {
         ))))]
         fn execute(#[case] character_id: String, #[case] expected: ActionResult) {
             let sheets = vec![
-                CharacterSheet::new("test-ko".to_string(), "テスト子".to_string(), 200),
-                CharacterSheet::new("test-ko-2".to_string(), "テスト2子".to_string(), 200),
+                CharacterSheet::new("test-ko".to_string(), "テスト子".to_string(), 200, 1000),
+                CharacterSheet::new("test-ko-2".to_string(), "テスト2子".to_string(), 200, 1000),
             ];
 
             let mut game_world = GameWorld::new(None);

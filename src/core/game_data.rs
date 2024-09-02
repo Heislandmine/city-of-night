@@ -99,7 +99,7 @@ mod game_data_test {
     use crate::core::character::Character;
 
     fn create_test_character() -> Character {
-        Character::new("test".to_string(), "test".to_string())
+        Character::new("test".to_string(), "test".to_string(), 1000)
     }
 
     #[cfg(test)]

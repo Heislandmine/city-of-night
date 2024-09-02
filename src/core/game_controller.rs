@@ -94,6 +94,7 @@ pub mod test {
             "expected".to_string(),
             "期待子".to_string(),
             200,
+            1000,
         )];
 
         let sut = GameController::new(
@@ -126,8 +127,8 @@ pub mod test {
             UserInventory::new(Some(vec!["test".to_string()])),
             GameWorld::new(None),
             vec![
-                CharacterSheet::new("expected".to_string(), "期待子".to_string(), 200),
-                CharacterSheet::new("test".to_string(), "テスト子".to_string(), 200),
+                CharacterSheet::new("expected".to_string(), "期待子".to_string(), 200, 1000),
+                CharacterSheet::new("test".to_string(), "テスト子".to_string(), 200, 1000),
             ],
             vec![CallId::new("1", "expected"), CallId::new("2", "test")],
         );
@@ -150,7 +151,7 @@ pub mod test {
         #[test]
         pub fn purchase_character() {
             let purchased_character =
-                CharacterSheet::new("test-ko".to_string(), "テスト子".to_string(), 200);
+                CharacterSheet::new("test-ko".to_string(), "テスト子".to_string(), 200, 1000);
             let expected = ActionResult::success(Some(TextMessage::new(
                 "テスト子を購入しました".to_string(),
                 true,
