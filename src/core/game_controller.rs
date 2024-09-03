@@ -1,6 +1,7 @@
 use super::{
     actions::{Action, ActionResult, PurchaseCharacterAction},
     call_id::CallId,
+    character::Character,
     character_sheet::CharacterSheet,
     game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
 };
@@ -81,6 +82,13 @@ impl GameController {
             None => self.current_breaking_character = None,
         }
     }
+
+    pub fn get_current_breaking_character(&mut self) -> Option<&Character> {
+        match &self.current_breaking_character {
+            Some(id) => self.world.get_character_by_id(id.clone()),
+            None => None,
+        }
+    }
 }
 
 #[cfg(test)]
@@ -157,7 +165,7 @@ pub mod test {
         let expected_id = "test-ko".to_string();
         let expected_character =
             Character::new("test-ko".to_string(), "テスト子".to_string(), 1000);
-        let sut = GameController::new(
+        let mut sut = GameController::new(
             UserInventory::new(None),
             GameWorld::new(Some(vec![expected_character.clone()])),
             Vec::new(),
@@ -166,7 +174,12 @@ pub mod test {
 
         sut.change_current_breaking_character(Some(expected_id));
 
-        assert_eq!(sut.get_current_breaking_character(), expected_character);
+        let result = sut.get_current_breaking_character();
+
+        match result {
+            Some(e) => assert_eq!(*e, expected_character),
+            None => assert!(false),
+        }
     }
 
     #[cfg(test)]
