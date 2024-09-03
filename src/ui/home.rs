@@ -26,16 +26,27 @@ impl Home {
     fn render_main_ui(&self, frame: &mut Frame, string_inputted: &String) {
         let area = frame.area();
 
+        let chr = Some(Character::new(
+            "demo-ko".to_string(),
+            "デモ子".to_string(),
+            1200,
+        ));
+
+        let display_breaking_character_area_size = match chr {
+            Some(_) => 3,
+            None => 0,
+        };
+
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
-                Constraint::Max(3),
+                Constraint::Max(3 + display_breaking_character_area_size),
                 Constraint::Min(3),
                 Constraint::Max(1),
             ])
             .split(area);
 
-        self.render_top_bar(frame, layout[0]);
+        self.render_top_bar(frame, layout[0], display_breaking_character_area_size);
 
         frame.render_widget(Paragraph::new(String::from(string_inputted)), layout[2]);
 
@@ -91,22 +102,12 @@ impl Home {
         );
     }
 
-    fn render_top_bar(&self, frame: &mut Frame, area: Rect) {
-        let chr = Some(Character::new(
-            "demo-ko".to_string(),
-            "デモ子".to_string(),
-            1200,
-        ));
-        let display_breaking_character_area_size = match chr {
-            Some(_) => 3,
-            None => 0,
-        };
-
+    fn render_top_bar(&self, frame: &mut Frame, area: Rect, breaking_character_area_size: u16) {
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
                 Constraint::Max(3),
-                Constraint::Min(display_breaking_character_area_size),
+                Constraint::Min(breaking_character_area_size),
             ])
             .split(area);
 
