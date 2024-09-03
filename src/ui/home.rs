@@ -92,6 +92,11 @@ impl Home {
     }
 
     fn render_top_bar(&self, frame: &mut Frame, area: Rect) {
+        let layout = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints(vec![Constraint::Max(3), Constraint::Min(0)])
+            .split(area);
+
         let top_bar_layout = Layout::default()
             .direction(Direction::Horizontal)
             .constraints(vec![
@@ -101,12 +106,12 @@ impl Home {
                 Constraint::Percentage(25),
             ])
             .margin(1)
-            .split(area);
+            .split(layout[0]);
         frame.render_widget(
             Block::new()
                 .border_type(BorderType::Plain)
                 .borders(Borders::all()),
-            area,
+            layout[0],
         );
         frame.render_widget(Paragraph::new("2124/8/5").centered(), top_bar_layout[0]);
         frame.render_widget(Paragraph::new("昼").centered(), top_bar_layout[1]);
