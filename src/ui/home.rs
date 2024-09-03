@@ -1,7 +1,8 @@
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
-    style::{Color, Style},
-    widgets::{Block, BorderType, Borders, Paragraph},
+    style::{Color, Modifier, Style},
+    symbols,
+    widgets::{Block, BorderType, Borders, Gauge, LineGauge, Paragraph},
     Frame,
 };
 
@@ -131,6 +132,18 @@ impl Home {
         frame.render_widget(Paragraph::new("昼").centered(), top_bar_layout[1]);
         frame.render_widget(Paragraph::new("10日目").centered(), top_bar_layout[2]);
         frame.render_widget(Paragraph::new("残り200日").centered(), top_bar_layout[3]);
+
+        frame.render_widget(
+            Gauge::default()
+                .gauge_style(
+                    Style::default()
+                        .fg(Color::White)
+                        .bg(Color::Black)
+                        .add_modifier(Modifier::ITALIC),
+                )
+                .percent(20),
+            layout[1],
+        )
     }
 }
 
