@@ -34,20 +34,20 @@ impl Home {
         ));
 
         let display_breaking_character_area_size = match chr {
-            Some(_) => 3,
-            None => 0,
+            Some(e) => (3, e.max_hp()),
+            None => (0, 0),
         };
 
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
-                Constraint::Max(3 + display_breaking_character_area_size),
+                Constraint::Max(3 + display_breaking_character_area_size.0),
                 Constraint::Min(3),
                 Constraint::Max(1),
             ])
             .split(area);
 
-        self.render_top_bar(frame, layout[0], display_breaking_character_area_size);
+        self.render_top_bar(frame, layout[0], display_breaking_character_area_size.0);
 
         frame.render_widget(Paragraph::new(String::from(string_inputted)), layout[2]);
 
