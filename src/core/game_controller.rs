@@ -71,12 +71,23 @@ impl GameController {
 
         result
     }
+
+    pub fn change_current_breaking_character<T>(&mut self, id: Option<T>)
+    where
+        T: Into<String>,
+    {
+        match id {
+            Some(s) => self.current_breaking_character = Some(s.into()),
+            None => self.current_breaking_character = None,
+        }
+    }
 }
 
 #[cfg(test)]
 pub mod test {
     use crate::core::{
         call_id::CallId,
+        character::Character,
         character_sheet::CharacterSheet,
         game_data::{CharactersAvailableForPurchase, GameWorld, UserInventory},
     };
@@ -139,6 +150,23 @@ pub mod test {
 
         assert!(result.contains(&expected), "{:?}", result);
         assert!(!result.contains(&expected_not_includes));
+    }
+
+    #[test]
+    fn set_currently_breaking_character_id() {
+        let expected_id = "test-ko".to_string();
+        let expected_character =
+            Character::new("test-ko".to_string(), "テスト子".to_string(), 1000);
+        let sut = GameController::new(
+            UserInventory::new(None),
+            GameWorld::new(Some(vec![expected_character.clone()])),
+            Vec::new(),
+            Vec::new(),
+        );
+
+        sut.change_current_breaking_character(Some(expected_id));
+
+        assert_eq!(sut.get_current_breaking_character(), expected_character);
     }
 
     #[cfg(test)]
