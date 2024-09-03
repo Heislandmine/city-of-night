@@ -10,6 +10,7 @@ pub struct GameController {
     world: GameWorld,
     character_sheets: Vec<CharacterSheet>,
     purchase_character_call_ids: Vec<CallId>,
+    current_breaking_character: Option<String>,
 }
 
 impl GameController {
@@ -24,6 +25,7 @@ impl GameController {
             world,
             character_sheets,
             purchase_character_call_ids: call_ids,
+            current_breaking_character: None,
         }
     }
 
