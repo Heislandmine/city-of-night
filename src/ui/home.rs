@@ -92,9 +92,13 @@ impl Home {
     }
 
     fn render_top_bar(&self, frame: &mut Frame, area: Rect) {
+        let display_breaking_character_area_size = 0;
         let layout = Layout::default()
             .direction(Direction::Vertical)
-            .constraints(vec![Constraint::Max(3), Constraint::Min(0)])
+            .constraints(vec![
+                Constraint::Max(3),
+                Constraint::Min(display_breaking_character_area_size),
+            ])
             .split(area);
 
         let top_bar_layout = Layout::default()
