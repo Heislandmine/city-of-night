@@ -6,7 +6,7 @@ use ratatui::{
 };
 
 use crate::{
-    core::{actions::Action, contexts::RenderContext, mode::ViewsMode},
+    core::{actions::Action, character::Character, contexts::RenderContext, mode::ViewsMode},
     ui::Component,
 };
 
@@ -92,7 +92,16 @@ impl Home {
     }
 
     fn render_top_bar(&self, frame: &mut Frame, area: Rect) {
-        let display_breaking_character_area_size = 0;
+        let chr = Some(Character::new(
+            "demo-ko".to_string(),
+            "デモ子".to_string(),
+            1200,
+        ));
+        let display_breaking_character_area_size = match chr {
+            Some(_) => 3,
+            None => 0,
+        };
+
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
