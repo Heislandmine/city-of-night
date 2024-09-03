@@ -33,7 +33,7 @@ impl Home {
             1200,
         ));
 
-        let display_breaking_character_area_size = match chr {
+        let display_breaking_character_info = match chr {
             Some(e) => (3, e.max_hp()),
             None => (0, 0),
         };
@@ -41,13 +41,13 @@ impl Home {
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
-                Constraint::Max(3 + display_breaking_character_area_size.0),
+                Constraint::Max(3 + display_breaking_character_info.0),
                 Constraint::Min(3),
                 Constraint::Max(1),
             ])
             .split(area);
 
-        self.render_top_bar(frame, layout[0], display_breaking_character_area_size.0);
+        self.render_top_bar(frame, layout[0], display_breaking_character_info);
 
         frame.render_widget(Paragraph::new(String::from(string_inputted)), layout[2]);
 
@@ -103,12 +103,12 @@ impl Home {
         );
     }
 
-    fn render_top_bar(&self, frame: &mut Frame, area: Rect, breaking_character_area_size: u16) {
+    fn render_top_bar(&self, frame: &mut Frame, area: Rect, breaking_character_info: (u16, u16)) {
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
                 Constraint::Max(3),
-                Constraint::Min(breaking_character_area_size),
+                Constraint::Min(breaking_character_info.0),
             ])
             .split(area);
 
