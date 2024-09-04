@@ -34,7 +34,7 @@ impl Home {
         ));
 
         let display_breaking_character_info = match chr {
-            Some(e) => (3, e.max_hp(), e.current_hp(), "デモ子".to_string()),
+            Some(e) => (3, e.max_hp(), e.current_hp(), e.display_name()),
             None => (0, 0, 0, String::new()),
         };
 
