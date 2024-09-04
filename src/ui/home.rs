@@ -144,6 +144,12 @@ impl Home {
             ((breaking_character_info.2 as f32 / breaking_character_info.1 as f32) * 100.0) as u16
         };
 
+        let character_info_area = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints(vec![Constraint::Max(6), Constraint::Min(1)])
+            .split(layout[1]);
+
+        frame.render_widget(Paragraph::new("体力: "), character_info_area[0]);
         frame.render_widget(
             Gauge::default()
                 .gauge_style(
@@ -153,7 +159,7 @@ impl Home {
                         .add_modifier(Modifier::ITALIC),
                 )
                 .percent(percent),
-            layout[1],
+            character_info_area[1],
         )
     }
 }
