@@ -34,8 +34,8 @@ impl Home {
         ));
 
         let display_breaking_character_info = match chr {
-            Some(e) => (3, e.max_hp()),
-            None => (0, 0),
+            Some(e) => (3, e.max_hp(), e.current_hp()),
+            None => (0, 0, 0),
         };
 
         let layout = Layout::default()
@@ -103,7 +103,12 @@ impl Home {
         );
     }
 
-    fn render_top_bar(&self, frame: &mut Frame, area: Rect, breaking_character_info: (u16, u16)) {
+    fn render_top_bar(
+        &self,
+        frame: &mut Frame,
+        area: Rect,
+        breaking_character_info: (u16, u16, u16),
+    ) {
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
@@ -133,6 +138,12 @@ impl Home {
         frame.render_widget(Paragraph::new("10日目").centered(), top_bar_layout[2]);
         frame.render_widget(Paragraph::new("残り200日").centered(), top_bar_layout[3]);
 
+        let percent = if breaking_character_info.0 == 0 {
+            0
+        } else {
+            ((breaking_character_info.2 as f32 / breaking_character_info.1 as f32) * 100.0) as u16
+        };
+
         frame.render_widget(
             Gauge::default()
                 .gauge_style(
@@ -141,7 +152,7 @@ impl Home {
                         .bg(Color::Black)
                         .add_modifier(Modifier::ITALIC),
                 )
-                .percent(20),
+                .percent(percent),
             layout[1],
         )
     }
