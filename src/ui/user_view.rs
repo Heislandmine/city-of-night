@@ -32,6 +32,7 @@ impl UserView {
                 let component = self.get_view(ViewsMode::PurchaseCharacter, context);
                 component.render(frame)
             }
+            _ => {}
         }
     }
 
@@ -43,12 +44,14 @@ impl UserView {
         match self.current_view {
             ViewsMode::Home => self.get_view(ViewsMode::Home, context),
             ViewsMode::PurchaseCharacter => self.get_view(ViewsMode::PurchaseCharacter, context),
+            _ => self.get_view(ViewsMode::Home, context),
         }
     }
     fn get_view(&mut self, view_id: ViewsMode, context: RenderContext) -> Box<dyn Component> {
         match view_id {
             ViewsMode::Home => Box::new(Home::new(context)),
             ViewsMode::PurchaseCharacter => Box::new(PurchaseCharacter::new(context)),
+            _ => Box::new(Home::new(context)),
         }
     }
 
