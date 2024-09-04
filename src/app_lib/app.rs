@@ -114,6 +114,7 @@ impl App {
             self.game_controller
                 .get_character_list_available_for_purchase(),
             self.last_action_result.message.clone(),
+            self.game_controller.get_current_breaking_character(),
         );
 
         context

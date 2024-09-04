@@ -83,7 +83,7 @@ impl GameController {
         }
     }
 
-    pub fn get_current_breaking_character(&mut self) -> Option<Character> {
+    pub fn get_current_breaking_character(&self) -> Option<Character> {
         match &self.current_breaking_character {
             Some(id) => self.world.get_character_by_id(id.clone()),
             None => None,
