@@ -20,16 +20,6 @@ impl Home {
         Self { context }
     }
 
-    pub fn render(&self, frame: &mut Frame, string_inputted: &String) {
-        let chr = Some(Character::new(
-            "demo-ko".to_string(),
-            "デモ子".to_string(),
-            1200,
-        ));
-
-        self.render_main_ui(frame, string_inputted, chr);
-    }
-
     fn render_main_ui(
         &self,
         frame: &mut Frame,
@@ -184,7 +174,14 @@ impl Component for Home {
             Some(s) => s.content.clone(),
             None => String::new(),
         };
-        self.render(frame, &msg);
+
+        let chr = Some(Character::new(
+            "demo-ko".to_string(),
+            "デモ子".to_string(),
+            1200,
+        ));
+
+        self.render_main_ui(frame, &msg, chr);
     }
 
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
