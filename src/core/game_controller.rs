@@ -1,5 +1,5 @@
 use super::{
-    actions::{Action, ActionResult, PurchaseCharacterAction},
+    actions::{Action, ActionResult, ActionStatus, PurchaseCharacterAction},
     call_id::CallId,
     character::Character,
     character_sheet::CharacterSheet,
@@ -38,7 +38,15 @@ impl GameController {
                     &mut self.user_inventory,
                     &self.character_sheets,
                 );
-                command.execute(id)
+                let result = command.execute(id.clone());
+
+                if result.status == ActionStatus::Success
+                    && self.current_breaking_character.is_none()
+                {
+                    self.current_breaking_character = Some(id.clone())
+                }
+
+                result
             }
             _ => ActionResult::none(),
         }
@@ -210,6 +218,11 @@ pub mod test {
 
             let result = sut.handle_action(action);
             assert_eq!(result, expected);
+
+            match sut.current_breaking_character {
+                Some(e) => assert_eq!(e, purchased_character.id()),
+                None => assert!(false),
+            }
         }
     }
 }
