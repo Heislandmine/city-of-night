@@ -144,10 +144,20 @@ impl Home {
             ((breaking_character_info.2 as f32 / breaking_character_info.1 as f32) * 100.0) as u16
         };
 
+        let character_info_area = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints(vec![Constraint::Max(1), Constraint::Min(1)])
+            .split(layout[1]);
+
+        frame.render_widget(
+            Paragraph::new("デモ子").style(Color::Green),
+            character_info_area[0],
+        );
+
         let hp_display_area = Layout::default()
             .direction(Direction::Horizontal)
             .constraints(vec![Constraint::Max(6), Constraint::Min(1)])
-            .split(layout[1]);
+            .split(character_info_area[1]);
 
         frame.render_widget(Paragraph::new("体力: "), hp_display_area[0]);
         frame.render_widget(
