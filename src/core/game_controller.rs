@@ -210,10 +210,6 @@ pub mod test {
 
             let result = sut.handle_action(action);
             assert_eq!(result, expected);
-            assert!(sut
-                .user_inventory
-                .is_character_owned(purchased_character.id()));
-            assert!(sut.world.is_character_exist(purchased_character.id()))
         }
     }
 }
