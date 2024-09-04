@@ -34,8 +34,8 @@ impl Home {
         ));
 
         let display_breaking_character_info = match chr {
-            Some(e) => (3, e.max_hp(), e.current_hp()),
-            None => (0, 0, 0),
+            Some(e) => (3, e.max_hp(), e.current_hp(), "デモ子".to_string()),
+            None => (0, 0, 0, String::new()),
         };
 
         let layout = Layout::default()
@@ -107,7 +107,7 @@ impl Home {
         &self,
         frame: &mut Frame,
         area: Rect,
-        breaking_character_info: (u16, u16, u16),
+        breaking_character_info: (u16, u16, u16, String),
     ) {
         let layout = Layout::default()
             .direction(Direction::Vertical)
@@ -150,7 +150,7 @@ impl Home {
             .split(layout[1]);
 
         frame.render_widget(
-            Paragraph::new("デモ子").style(Color::Green),
+            Paragraph::new(breaking_character_info.3).style(Color::Green),
             character_info_area[0],
         );
 
