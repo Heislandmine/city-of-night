@@ -175,13 +175,9 @@ impl Component for Home {
             None => String::new(),
         };
 
-        let chr = Some(Character::new(
-            "demo-ko".to_string(),
-            "デモ子".to_string(),
-            1200,
-        ));
+        let breaking_character = self.context.breaking_character.clone();
 
-        self.render_main_ui(frame, &msg, chr);
+        self.render_main_ui(frame, &msg, breaking_character);
     }
 
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
