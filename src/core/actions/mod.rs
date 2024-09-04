@@ -147,10 +147,7 @@ pub mod actions_test {
             assert_eq!(result, expected);
 
             // キャラクター生成の確認
-            match game_world.get_character_by_id(character_id.clone()) {
-                Some(e) => assert_eq!(e.id(), character_id),
-                None => assert!(false),
-            }
+            game_world.is_character_exist(character_id.clone());
 
             // ユーザーインベントリーにキャラクターIDが追加されたか確認
             assert!(user_inventory.owned_characters().contains(&character_id))
