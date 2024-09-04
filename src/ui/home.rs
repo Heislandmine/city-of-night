@@ -21,19 +21,23 @@ impl Home {
     }
 
     pub fn render(&self, frame: &mut Frame, string_inputted: &String) {
-        self.render_main_ui(frame, string_inputted);
-    }
-
-    fn render_main_ui(&self, frame: &mut Frame, string_inputted: &String) {
-        let area = frame.area();
-
         let chr = Some(Character::new(
             "demo-ko".to_string(),
             "デモ子".to_string(),
             1200,
         ));
 
-        let display_breaking_character_info = match chr {
+        self.render_main_ui(frame, string_inputted, chr);
+    }
+
+    fn render_main_ui(
+        &self,
+        frame: &mut Frame,
+        string_inputted: &String,
+        breaking_character: Option<Character>,
+    ) {
+        let area = frame.area();
+        let display_breaking_character_info = match breaking_character {
             Some(e) => (3, e.max_hp(), e.current_hp(), e.display_name()),
             None => (0, 0, 0, String::new()),
         };
