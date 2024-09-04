@@ -45,8 +45,13 @@ impl GameWorld {
         self.characters.push(character);
     }
 
-    pub fn get_character_by_id(&self, character_id: String) -> Option<&Character> {
-        self.characters.iter().find(|e| e.id() == character_id)
+    pub fn get_character_by_id(&self, character_id: String) -> Option<Character> {
+        let result = self.characters.iter().find(|e| e.id() == character_id);
+
+        match result {
+            Some(e) => Some(e.clone()),
+            None => None,
+        }
     }
 
     pub fn is_character_exist(&self, character_id: String) -> bool {

@@ -83,7 +83,7 @@ impl GameController {
         }
     }
 
-    pub fn get_current_breaking_character(&mut self) -> Option<&Character> {
+    pub fn get_current_breaking_character(&mut self) -> Option<Character> {
         match &self.current_breaking_character {
             Some(id) => self.world.get_character_by_id(id.clone()),
             None => None,
@@ -177,7 +177,7 @@ pub mod test {
         let result = sut.get_current_breaking_character();
 
         match result {
-            Some(e) => assert_eq!(*e, expected_character),
+            Some(e) => assert_eq!(e, expected_character),
             None => assert!(false),
         }
     }
