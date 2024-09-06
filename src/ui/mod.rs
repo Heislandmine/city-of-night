@@ -1,6 +1,7 @@
 use ratatui::Frame;
 
 use crate::core::actions::Action;
+pub mod breaking;
 pub mod home;
 pub mod purchase_character;
 pub mod user_view;
