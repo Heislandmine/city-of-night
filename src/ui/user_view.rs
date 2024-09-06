@@ -2,7 +2,7 @@ use ratatui::Frame;
 
 use crate::core::{actions::Action, contexts::RenderContext, mode::ViewsMode};
 
-use super::{home::Home, purchase_character::PurchaseCharacter, Component};
+use super::{breaking::BreakingView, home::Home, purchase_character::PurchaseCharacter, Component};
 
 pub struct UserView {
     current_view: ViewsMode,
@@ -32,7 +32,10 @@ impl UserView {
                 let component = self.get_view(ViewsMode::PurchaseCharacter, context);
                 component.render(frame)
             }
-            _ => {}
+            ViewsMode::Breaking => {
+                let component = self.get_view(ViewsMode::Breaking, context);
+                component.render(frame)
+            }
         }
     }
 
@@ -44,14 +47,14 @@ impl UserView {
         match self.current_view {
             ViewsMode::Home => self.get_view(ViewsMode::Home, context),
             ViewsMode::PurchaseCharacter => self.get_view(ViewsMode::PurchaseCharacter, context),
-            _ => self.get_view(ViewsMode::Home, context),
+            ViewsMode::Breaking => self.get_view(ViewsMode::Breaking, context),
         }
     }
     fn get_view(&mut self, view_id: ViewsMode, context: RenderContext) -> Box<dyn Component> {
         match view_id {
             ViewsMode::Home => Box::new(Home::new(context)),
             ViewsMode::PurchaseCharacter => Box::new(PurchaseCharacter::new(context)),
-            _ => Box::new(Home::new(context)),
+            ViewsMode::Breaking => Box::new(BreakingView::new(context)),
         }
     }
 

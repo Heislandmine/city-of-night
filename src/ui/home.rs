@@ -182,6 +182,8 @@ impl Component for Home {
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
         if *user_input == String::from("101") {
             return Action::Navigate(ViewsMode::PurchaseCharacter);
+        } else if *user_input == String::from("100") {
+            return Action::Navigate(ViewsMode::Breaking);
         } else {
             return Action::None;
         }
