@@ -6,12 +6,7 @@ use ratatui::{
 };
 
 use crate::{
-    core::{
-        actions::{Action, TextMessage},
-        character::Character,
-        contexts::RenderContext,
-        mode::ViewsMode,
-    },
+    core::{actions::Action, contexts::RenderContext, mode::ViewsMode},
     ui::Component,
 };
 
