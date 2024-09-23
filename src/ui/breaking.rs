@@ -19,11 +19,19 @@ impl BreakingView {
     }
 
     fn render_character_info(&self, frame: &mut Frame, area: Rect, character_info: Character) {
+        let layout = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints(vec![Constraint::Max(3), Constraint::Min(1)])
+            .margin(1)
+            .split(area);
+
+        frame.render_widget(Paragraph::new("キャラクター名: {}"), layout[0]);
+
         let display_hp_area = Layout::default()
             .direction(Direction::Horizontal)
             .constraints(vec![Constraint::Max(6), Constraint::Min(1)])
-            .margin(1)
-            .split(area);
+            .split(layout[1]);
+
         frame.render_widget(Block::new().borders(Borders::all()), area);
 
         let percent =
