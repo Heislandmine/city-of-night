@@ -25,7 +25,10 @@ impl BreakingView {
             .margin(1)
             .split(area);
 
-        frame.render_widget(Paragraph::new("キャラクター名: {}"), layout[0]);
+        frame.render_widget(
+            Paragraph::new(format!("キャラクター名: {}", character_info.display_name())),
+            layout[0],
+        );
 
         let display_hp_area = Layout::default()
             .direction(Direction::Horizontal)
@@ -61,11 +64,10 @@ impl Component for BreakingView {
             ])
             .split(frame.area());
 
-        self.render_character_info(
-            frame,
-            layout[0],
-            Character::new("tr".to_string(), "デモ子".to_string(), 2000),
-        )
+        match &self.context.breaking_character {
+            Some(character) => self.render_character_info(frame, layout[0], character.clone()),
+            None => {}
+        }
     }
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
         Action::None
