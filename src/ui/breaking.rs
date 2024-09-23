@@ -99,6 +99,13 @@ impl Component for BreakingView {
             .margin(1)
             .split(layout[2]);
         frame.render_widget(Paragraph::new("[999]終了"), footer_command_area[0]);
+
+        // テキストエリアの描画
+        let msg = match &self.context.message {
+            Some(text) => text.content.clone(),
+            None => String::new(),
+        };
+        frame.render_widget(Paragraph::new(String::from(msg)), layout[3]);
     }
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
         if *user_input == String::from("999") {
