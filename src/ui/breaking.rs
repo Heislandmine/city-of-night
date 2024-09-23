@@ -5,7 +5,9 @@ use ratatui::{
     Frame,
 };
 
-use crate::core::{actions::Action, character::Character, contexts::RenderContext};
+use crate::core::{
+    actions::Action, character::Character, contexts::RenderContext, mode::ViewsMode,
+};
 
 use super::Component;
 
@@ -70,6 +72,9 @@ impl Component for BreakingView {
         }
     }
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
+        if *user_input == String::from("999") {
+            return Action::Navigate(ViewsMode::Home);
+        }
         Action::None
     }
 }
