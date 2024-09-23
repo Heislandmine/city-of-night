@@ -38,6 +38,7 @@ impl Home {
             None => (0, 0, 0, String::new()),
         };
 
+        // 画面全体のレイアウトを決める
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
@@ -47,11 +48,13 @@ impl Home {
             ])
             .split(area);
 
+        // topバーの描画
         self.render_top_bar(frame, layout[0], display_breaking_character_info);
 
         // テキストエリアの描画
         render_output_message(message, frame, layout[2]);
 
+        // コマンドエリアの描画
         frame.render_widget(
             Block::new()
                 .border_type(BorderType::Plain)
@@ -59,7 +62,6 @@ impl Home {
                 .border_style(Style::default().fg(Color::White)),
             layout[1],
         );
-
         let command_area_raws = Layout::new(
             Direction::Vertical,
             vec![
@@ -70,7 +72,6 @@ impl Home {
             ],
         )
         .split(layout[1]);
-
         let command_area_first_row = Layout::new(
             Direction::Horizontal,
             vec![
@@ -177,9 +178,77 @@ impl Home {
 
 impl Component for Home {
     fn render(&self, frame: &mut Frame) {
-        let breaking_character = self.context.breaking_character.clone();
+        let area = frame.area();
+        let display_breaking_character_info = match &self.context.breaking_character {
+            Some(e) => (3, e.max_hp(), e.current_hp(), e.display_name()),
+            None => (0, 0, 0, String::new()),
+        };
 
-        self.render_main_ui(frame, &self.context.message, breaking_character);
+        // 画面全体のレイアウトを決める
+        let layout = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints(vec![
+                Constraint::Max(3 + display_breaking_character_info.0),
+                Constraint::Min(3),
+                Constraint::Max(1),
+            ])
+            .split(area);
+
+        // topバーの描画
+        self.render_top_bar(frame, layout[0], display_breaking_character_info);
+
+        // テキストエリアの描画
+        render_output_message(&self.context.message, frame, layout[2]);
+
+        // コマンドエリアの描画
+        frame.render_widget(
+            Block::new()
+                .border_type(BorderType::Plain)
+                .borders(Borders::all())
+                .border_style(Style::default().fg(Color::White)),
+            layout[1],
+        );
+        let command_area_raws = Layout::new(
+            Direction::Vertical,
+            vec![
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+            ],
+        )
+        .split(layout[1]);
+        let command_area_first_row = Layout::new(
+            Direction::Horizontal,
+            vec![
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+            ],
+        )
+        .margin(1)
+        .split(command_area_raws[0]);
+
+        frame.render_widget(
+            Paragraph::new("[100]調教").centered(),
+            command_area_first_row[0],
+        );
+
+        frame.render_widget(
+            Paragraph::new("[101]奴隷購入").centered(),
+            command_area_first_row[1],
+        );
+
+        frame.render_widget(
+            Paragraph::new("[200]セーブ").centered(),
+            command_area_first_row[2],
+        );
+
+        frame.render_widget(
+            Paragraph::new("[300]ロード").centered(),
+            command_area_first_row[3],
+        );
     }
 
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
