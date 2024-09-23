@@ -8,6 +8,8 @@ use crate::{
     ui::Component,
 };
 
+use super::render_output_message;
+
 pub struct PurchaseCharacter {
     context: RenderContext,
 }
@@ -75,12 +77,8 @@ impl Component for PurchaseCharacter {
 
         frame.render_widget(Paragraph::new("[999]戻る"), footer_command_area[0]);
 
-        // ユーザー入力表示エリア
-        let msg = match &self.context.message {
-            Some(s) => s.content.clone(),
-            None => "".to_string(),
-        };
-        frame.render_widget(Paragraph::new(msg), layouts[2]);
+        // テキストエリアの描画
+        render_output_message(&self.context.message, frame, layouts[2]);
     }
 
     fn handle_key_pressed_event(&self, user_input: &String) -> Action {
