@@ -6,7 +6,10 @@ use ratatui::{
 };
 
 use crate::core::{
-    actions::Action, character::Character, contexts::RenderContext, mode::ViewsMode,
+    actions::{Action, TextMessage},
+    character::Character,
+    contexts::RenderContext,
+    mode::ViewsMode,
 };
 
 use super::Component;
@@ -100,12 +103,16 @@ impl Component for BreakingView {
             .split(layout[2]);
         frame.render_widget(Paragraph::new("[999]終了"), footer_command_area[0]);
 
+        fn render_output_message(message: &Option<TextMessage>, frame: &mut Frame, area: Rect) {
+            let msg = match message {
+                Some(text) => text.content.clone(),
+                None => String::new(),
+            };
+
+            frame.render_widget(Paragraph::new(msg), area);
+        }
         // テキストエリアの描画
-        let msg = match &self.context.message {
-            Some(text) => text.content.clone(),
-            None => String::new(),
-        };
-        frame.render_widget(Paragraph::new(String::from(msg)), layout[3]);
+        render_output_message(&self.context.message, frame, layout[3]);
     }
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
         if *user_input == String::from("999") {
