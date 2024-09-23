@@ -6,13 +6,10 @@ use ratatui::{
 };
 
 use crate::core::{
-    actions::{Action, TextMessage},
-    character::Character,
-    contexts::RenderContext,
-    mode::ViewsMode,
+    actions::Action, character::Character, contexts::RenderContext, mode::ViewsMode,
 };
 
-use super::Component;
+use super::{render_output_message, Component};
 
 pub struct BreakingView {
     context: RenderContext,
@@ -103,14 +100,6 @@ impl Component for BreakingView {
             .split(layout[2]);
         frame.render_widget(Paragraph::new("[999]終了"), footer_command_area[0]);
 
-        fn render_output_message(message: &Option<TextMessage>, frame: &mut Frame, area: Rect) {
-            let msg = match message {
-                Some(text) => text.content.clone(),
-                None => String::new(),
-            };
-
-            frame.render_widget(Paragraph::new(msg), area);
-        }
         // テキストエリアの描画
         render_output_message(&self.context.message, frame, layout[3]);
     }
