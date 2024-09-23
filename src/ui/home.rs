@@ -6,9 +6,16 @@ use ratatui::{
 };
 
 use crate::{
-    core::{actions::Action, character::Character, contexts::RenderContext, mode::ViewsMode},
+    core::{
+        actions::{Action, TextMessage},
+        character::Character,
+        contexts::RenderContext,
+        mode::ViewsMode,
+    },
     ui::Component,
 };
+
+use super::render_output_message;
 
 pub struct Home {
     context: RenderContext,
@@ -22,7 +29,7 @@ impl Home {
     fn render_main_ui(
         &self,
         frame: &mut Frame,
-        string_inputted: &String,
+        message: &Option<TextMessage>,
         breaking_character: Option<Character>,
     ) {
         let area = frame.area();
@@ -42,7 +49,8 @@ impl Home {
 
         self.render_top_bar(frame, layout[0], display_breaking_character_info);
 
-        frame.render_widget(Paragraph::new(String::from(string_inputted)), layout[2]);
+        // テキストエリアの描画
+        render_output_message(message, frame, layout[2]);
 
         frame.render_widget(
             Block::new()
@@ -169,14 +177,9 @@ impl Home {
 
 impl Component for Home {
     fn render(&self, frame: &mut Frame) {
-        let msg = match &self.context.message {
-            Some(s) => s.content.clone(),
-            None => String::new(),
-        };
-
         let breaking_character = self.context.breaking_character.clone();
 
-        self.render_main_ui(frame, &msg, breaking_character);
+        self.render_main_ui(frame, &self.context.message, breaking_character);
     }
 
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
