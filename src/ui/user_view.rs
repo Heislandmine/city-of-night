@@ -6,7 +6,7 @@ use super::{
     breaking::BreakingView,
     home::Home,
     purchase_character::PurchaseCharacter,
-    render_contexts::{HomeRenderContext, PurchaseCharacterRenderContext},
+    render_contexts::{BreakingRenderContext, HomeRenderContext, PurchaseCharacterRenderContext},
     Component,
 };
 
@@ -68,7 +68,10 @@ impl UserView {
                     context.message,
                 )))
             }
-            ViewsMode::Breaking => Box::new(BreakingView::new(context)),
+            ViewsMode::Breaking => Box::new(BreakingView::new(BreakingRenderContext::new(
+                context.breaking_character,
+                context.message,
+            ))),
         }
     }
 

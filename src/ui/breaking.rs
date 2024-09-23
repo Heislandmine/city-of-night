@@ -5,18 +5,16 @@ use ratatui::{
     Frame,
 };
 
-use crate::core::{
-    actions::Action, character::Character, contexts::RenderContext, mode::ViewsMode,
-};
+use crate::core::{actions::Action, character::Character, mode::ViewsMode};
 
-use super::{render_output_message, Component};
+use super::{render_contexts::BreakingRenderContext, render_output_message, Component};
 
 pub struct BreakingView {
-    context: RenderContext,
+    context: BreakingRenderContext,
 }
 
 impl BreakingView {
-    pub fn new(context: RenderContext) -> Self {
+    pub fn new(context: BreakingRenderContext) -> Self {
         Self { context }
     }
 

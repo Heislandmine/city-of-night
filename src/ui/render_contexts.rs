@@ -32,3 +32,17 @@ impl PurchaseCharacterRenderContext {
         }
     }
 }
+
+pub struct BreakingRenderContext {
+    pub breaking_character: Option<Character>,
+    pub message: Option<TextMessage>,
+}
+
+impl BreakingRenderContext {
+    pub fn new(breaking_character: Option<Character>, message: Option<TextMessage>) -> Self {
+        Self {
+            breaking_character,
+            message,
+        }
+    }
+}
