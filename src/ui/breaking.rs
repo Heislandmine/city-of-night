@@ -65,10 +65,7 @@ impl Component for BreakingView {
             ])
             .split(frame.area());
 
-        match &self.context.breaking_character {
-            Some(character) => self.render_character_info(frame, layout[0], character.clone()),
-            None => {}
-        }
+        self.render_character_info(frame, layout[0], self.context.breaking_character.clone());
 
         // コマンドエリアの描画
         frame.render_widget(Block::new().borders(Borders::all()), layout[1]);

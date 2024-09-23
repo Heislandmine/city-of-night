@@ -68,10 +68,16 @@ impl UserView {
                     context.message,
                 )))
             }
-            ViewsMode::Breaking => Box::new(BreakingView::new(BreakingRenderContext::new(
-                context.breaking_character,
-                context.message,
-            ))),
+            ViewsMode::Breaking => match context.breaking_character {
+                Some(character) => Box::new(BreakingView::new(BreakingRenderContext::new(
+                    character,
+                    context.message,
+                ))),
+                None => Box::new(Home::new(HomeRenderContext::new(
+                    context.breaking_character,
+                    context.message,
+                ))),
+            },
         }
     }
 
