@@ -6,30 +6,11 @@ use ratatui::{
 };
 
 use crate::{
-    core::{
-        actions::{Action, TextMessage},
-        character::Character,
-        contexts::RenderContext,
-        mode::ViewsMode,
-    },
+    core::{actions::Action, mode::ViewsMode},
     ui::Component,
 };
 
-use super::render_output_message;
-
-pub struct HomeRenderContext {
-    pub breaking_character: Option<Character>,
-    pub message: Option<TextMessage>,
-}
-
-impl HomeRenderContext {
-    pub fn new(breaking_character: Option<Character>, message: Option<TextMessage>) -> Self {
-        Self {
-            breaking_character,
-            message,
-        }
-    }
-}
+use super::{render_contexts::HomeRenderContext, render_output_message};
 
 pub struct Home {
     context: HomeRenderContext,
