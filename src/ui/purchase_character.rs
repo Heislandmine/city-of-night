@@ -4,18 +4,18 @@ use ratatui::{
 };
 
 use crate::{
-    core::{actions::Action, contexts::RenderContext, mode::ViewsMode},
+    core::{actions::Action, mode::ViewsMode},
     ui::Component,
 };
 
-use super::render_output_message;
+use super::{render_contexts::PurchaseCharacterRenderContext, render_output_message};
 
 pub struct PurchaseCharacter {
-    context: RenderContext,
+    context: PurchaseCharacterRenderContext,
 }
 
 impl PurchaseCharacter {
-    pub fn new(context: RenderContext) -> Self {
+    pub fn new(context: PurchaseCharacterRenderContext) -> Self {
         Self { context }
     }
 }

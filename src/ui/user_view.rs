@@ -3,8 +3,11 @@ use ratatui::Frame;
 use crate::core::{actions::Action, contexts::RenderContext, mode::ViewsMode};
 
 use super::{
-    breaking::BreakingView, home::Home, purchase_character::PurchaseCharacter,
-    render_contexts::HomeRenderContext, Component,
+    breaking::BreakingView,
+    home::Home,
+    purchase_character::PurchaseCharacter,
+    render_contexts::{HomeRenderContext, PurchaseCharacterRenderContext},
+    Component,
 };
 
 pub struct UserView {
@@ -59,7 +62,12 @@ impl UserView {
                 context.breaking_character,
                 context.message,
             ))),
-            ViewsMode::PurchaseCharacter => Box::new(PurchaseCharacter::new(context)),
+            ViewsMode::PurchaseCharacter => {
+                Box::new(PurchaseCharacter::new(PurchaseCharacterRenderContext::new(
+                    context.character_list_available_for_purchase,
+                    context.message,
+                )))
+            }
             ViewsMode::Breaking => Box::new(BreakingView::new(context)),
         }
     }
