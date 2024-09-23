@@ -60,8 +60,9 @@ impl Component for BreakingView {
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![
-                Constraint::Max(6),
+                Constraint::Max(7),
                 Constraint::Min(1),
+                Constraint::Max(3),
                 Constraint::Max(1),
             ])
             .split(frame.area());
@@ -70,6 +71,34 @@ impl Component for BreakingView {
             Some(character) => self.render_character_info(frame, layout[0], character.clone()),
             None => {}
         }
+
+        // コマンドエリアの描画
+        frame.render_widget(Block::new().borders(Borders::all()), layout[1]);
+        let command_area = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints(vec![
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+            ])
+            .margin(1)
+            .split(layout[1]);
+        frame.render_widget(Paragraph::new("[1]愛撫"), command_area[0]);
+
+        // フッターコマンドエリアの描画
+        frame.render_widget(Block::new().borders(Borders::all()), layout[2]);
+        let footer_command_area = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints(vec![
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+                Constraint::Percentage(25),
+            ])
+            .margin(1)
+            .split(layout[2]);
+        frame.render_widget(Paragraph::new("[999]終了"), footer_command_area[0]);
     }
     fn handle_key_pressed_event(&self, user_input: &String) -> crate::core::actions::Action {
         if *user_input == String::from("999") {
